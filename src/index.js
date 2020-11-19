@@ -1,13 +1,20 @@
+// Third Party Libraries
 import React from 'react';
 import ReactDOM from 'react-dom';
+
+// Components
 import './index.css';
-import App from './App';
+import App from './App'; // .js extension is optional
+
 import reportWebVitals from './reportWebVitals';
 
 ReactDOM.render(
+  // What do I want to render?
+  // <App /> is component syntax
   <React.StrictMode>
-    <App />
+    <App />  
   </React.StrictMode>,
+  // Where do I want to render it?
   document.getElementById('root')
 );
 

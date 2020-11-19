@@ -1,11 +1,11 @@
-import logo from './logo.svg';
 import './App.css';
+import Footer from './Footer'
 
 function App() {
   return (
+    // Can only put one JSX component, so a trick is to wrap in a div first
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
         </p>
@@ -18,6 +18,7 @@ function App() {
           Learn React
         </a>
       </header>
+      <Footer />
     </div>
   );
 }
