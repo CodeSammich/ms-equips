@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 class Search extends React.Component {
   constructor(props) {
@@ -10,54 +10,155 @@ class Search extends React.Component {
     // 2. Reference that object (Search) using the keyword `this`
     //
     // Result: `this` inside getItems() and its callbacks/promises is the Search object
+    this.updateName = this.updateName.bind(this);
+    this.updateRegion = this.updateRegion.bind(this);
+    this.updateVersion = this.updateVersion.bind(this);
     this.getItems = this.getItems.bind(this);
+    this.removeDuplicates = this.removeDuplicates.bind(this);
+    this.generateItemLayouts = this.generateItemLayouts.bind(this);
 
     // state is a special field that allows this.setState() to save data from promises
     this.state = {
-      items: null
+      region: "GMS",
+      version: 217,
+      name: null,
+      results: null,
+      maxNumResult: 5
     }
   }
 
-  getItems() {
+  updateName(event) {
+    /*
+    Updates the form input with previously submitted text
+
+    event: form submit event
+    */
+    this.setState({
+      name: event.target.value
+    });
+  }
+
+  updateRegion(event) {
+    /*
+    Updates the form input with previously submitted text
+
+    event: form submit event
+    */
+    this.setState({
+      region: event.target.value
+    });
+  }
+
+  updateVersion(event) {
+    /*
+    Updates the form input with previously submitted text
+
+    event: form submit event
+    */
+    this.setState({
+      version: event.target.value
+    });
+  }
+
+  removeDuplicates(response) {
+    // filter response to remove duplicate items with same item, capping at maxNumResult
+    this.map = new Map();
+    let items = response.filter(
+      item => {
+        // Add each element to a Map and filter out all duplicate names + extra results
+        // return true == keep in the items array
+        if (this.map.get(item.name) == undefined && this.map.size < this.state.maxNumResult) {
+          this.map.set(item.name, item.name);
+          return true;
+        }
+        return false;
+      }
+    );
+    return items;
+  }
+
+  generateItemLayouts(items) {
+    // Parse the list of JSON objects received from API and create array of item layouts
+    items = items.map((item) => {
+      let imgURL = `https://maplestory.io/api/${this.state.region}/` 
+        + `${this.state.version}/item/`
+        + `${item.id}/icon`;
+      
+      return (
+        // List items should have unique keys, but certain Maple items have multiple IDs
+        <li key={item.id} style={{ listStyleType: "none"}}>
+          {item.name}
+          <img className="body-icons" src={imgURL} />
+        </li>
+      ) 
+    });
+    return items;
+  }
+
+  getItems(event) {
     /*
     Query a list of equipment items based on search
-      region: "GMS"
-      version: "210.1.1"
-      itemName: "Fafnir"           Capitalization is important
+      this.props.region: "GMS"
+      this.props.version: "210.1.1"
+      this.props.itemName: "Fafnir"           Capitalization is important
 
-    TODO: Handle failed requests
+    event: form submit event
+
+    TODO: Handle failed requests (e.g. equips that don't exist in previous versions)
     */
-    const url = `https://maplestory.io/api/${this.props.region}/${this.props.version}/item?searchFor=${this.props.itemName}`;
+    // prevent default form behavior from HTML
+    event.preventDefault();
+
+    const url = `https://maplestory.io/api/${this.state.region}`
+      + `/${this.state.version}/item?searchFor=${this.state.name}`;
     console.log(url);
     
     fetch(url)
       .then(response => response.json()) 
       .then(response => {
-        console.log(typeof(response));
+        let items = this.removeDuplicates(response);
+        items = this.generateItemLayouts(items);
 
-        // Parse the JSON object and create an array 
-        const items = response.map((item) => 
-          // List items should have unique keys, but certain Maple items have multiple IDs
-          <li key={item.id}>
-            {item.name}
-          </li>
-        );
-
-        // Update state information. This is required to save information at the end of a promise
+        // setState is required to save information at the end of a promise
         this.setState({
-          items: items 
+          results: items
         });
       });
   }
 
+  // TODO: make a component for tooltip
   render() {
     return (
-      <div>
-        <button onClick={this.getItems}>
-          Search Items
-        </button>
+      <div className="body-search">
+        {/* Search for Item form */}
+        <form onSubmit={this.getItems}>
+          <div className="form-group">
+            <label for="itemName">
+              Item Name: 
+            </label>
+            <input id="itemName" type="text" value={this.state.name} 
+              onChange={this.updateName} placeholder="Fafnir Mercy"/>
+          </div>
+          <div className="form-group">
+            <label for="region">
+              Region: 
+            </label>
+            <input id="region" type="text" value={this.state.region} 
+              onChange={this.updateRegion} />
+          </div>
+          <div className="form-group">
+            <label for="version">
+              Version: &nbsp;
+              <input type="text" value={this.state.version} 
+                onChange={this.updateVersion} />
+            </label>
+            <button id="version" type="submit" value="Submit" 
+              className="btn btn-primary"/>
+          </div>
+        </form>
+        {/* Search Results (list of items) */}
         <ul>
-          {this.state.items}
+          {this.state.results}
         </ul>
       </div>
     )

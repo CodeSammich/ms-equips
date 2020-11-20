@@ -27,6 +27,19 @@
   color: black;
 }
 
+.body-icons {
+  height: 5vh;
+  width: 5vw;
+  padding-left: 1vh;
+}
+
+.body-search {
+  display: flex;
+  margin-left: auto;
+  flex-direction: column;
+  align-items: center;
+}
+
 .App-footer {
   background-color: #ad787f;
   min-height: 5vh;
@@ -42,8 +55,8 @@
 .footer-icons { 
   align-items: right;
   height: 5vh;
-  width: 5vw;
-  padding-left: 1vh;
+  width: 5vh;
+  padding-left: 5vw;
 }
 
 .footer-text {

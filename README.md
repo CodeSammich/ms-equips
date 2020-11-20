@@ -4,15 +4,18 @@ A GUI for MapleStory equipment damage calculator. The idea is to convert Masteri
 
 # Todo:
 
-## MVP
+## Minimum Viable Product (MVP)
 
-- Access the maplestory.io API and load equipment images
-- For each equipment, display text tooltip + stats in simple layout
-- Sort those images/data into a search bar
-- Copy equipment window UI that can "equip" the correct equip categories
-- Produce a simple header with Twitch/YT/Github links + space for more tools
+- [x] Access the maplestory.io API and load equipment images
+- [x] Sort those images/data into a search bar
+- [ ] For each equipment, display text tooltip + stats in simple layout
+- [ ] Allow users to "equip" the items found
+- [ ] Calculate the appropriate stats and display them
+- [ ] Produce a simple header with Twitch/YT/Github links + space for more tools
 
 # Backlog
 
-- Augment searchbar with an inventory UI
-- Generate a fancy in-game tooltip for each equip
+- [ ] Augment searchbar with an inventory UI
+- [ ] Generate a fancy in-game tooltip for each equip
+- [ ] Generate several pages of items, instead of just 5 items on one page
+- [ ] Copy the in-game UI for equipment window, inventory window, and tooltip (for search)
