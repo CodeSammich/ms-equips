@@ -7,10 +7,10 @@ function Footer() {
   return (
     <footer className="App-footer">
       <p className="footer-text"> This website was built by Nox. </p>
-      <a href="https://twitch.tv/code_nox" target="_blank">
+      <a href="https://twitch.tv/code_nox" target="_blank" rel="noreferrer">
         <img className="footer-icons" alt="Twitch Logo" src={twitch_logo} />
       </a>
-      <a href="https://www.youtube.com/c/NoxStream" target="_blank">
+      <a href="https://www.youtube.com/c/NoxStream" target="_blank" rel="noreferrer">
         <img className="footer-icons" alt="Youtube Logo" src={youtube_logo} />
       </a>
     </footer>
