@@ -1,6 +1,6 @@
 import Search from './Search'
 
-function Body() {
+const Body = () => {
   // TODO: replace hardcoded value of region, version, etc. with props params
   return (
     /*
