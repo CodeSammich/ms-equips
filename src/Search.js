@@ -14,7 +14,8 @@ const getItems = (name) => {
 
   TODO: Handle failed requests (e.g. equips that don't exist in previous versions)
   */
-  const url = `https://maplestory.io/api/${REGION}/${VERSION}/item?searchFor=${name}`;
+  let url = `https://maplestory.io/api/${REGION}/${VERSION}/item?searchFor=${name}`;
+  url = encodeURI(url); // converts spaces to %20, for example
   console.log(url);
   
   // Return the promise function that has generatedItemLayouts as part of the promise
@@ -25,7 +26,8 @@ const removeNonEquips = (response) => {
   // return array s.t. only equips are returned
   let results = [];
   response.forEach((item) => {
-    if (item.typeInfo.overallCategory == 'Equip') {
+    if (item.typeInfo.overallCategory === 'Equip' || item.typeInfo.overallCategory === 'Unknown') {
+      // Some items are not labeled properly.. so this function may not be a good idea?
       results.push(item);
     }
   });
@@ -48,6 +50,7 @@ const generateItemLayouts = (items, setTooltipID) => {
     // TODO: Optimize image loading to load directly from Item object specifically?
     // This may be overlapping with item-specific tooltip api request
     let imgURL = `https://maplestory.io/api/${REGION}/${VERSION}/item/${item.id}/icon`;
+    imgURL = encodeURI(imgURL);
 
     return (
       // List items should have unique keys, but certain Maple items have multiple IDs

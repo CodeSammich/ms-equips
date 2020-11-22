@@ -5,7 +5,8 @@ import {REGION, VERSION} from './Search'
 const queryItemStats = (itemID) => {
   // Queries maplestory.io API for detailed item information
   // including the stats listed below, icons, etc.
-  const url = `https://maplestory.io/api/${REGION}/${VERSION}/item/${itemID}`;
+  let url = `https://maplestory.io/api/${REGION}/${VERSION}/item/${itemID}`;
+  encodeURI(url);
   return fetch(url);
 }
 
@@ -181,11 +182,11 @@ const ItemTooltip = (props) => {
         setName(item.description.name);
         setRequiredLevel(item.metaInfo.reqLevel);
         // Each region has different maximum hammer slots
-        if (REGION == 'KMS') {
+        if (REGION === 'KMS') {
           setHammers(1);
-        } else if (REGION == 'GMS' || REGION == 'MSEA' || REGION == 'CMS') {
+        } else if (REGION === 'GMS' || REGION === 'MSEA' || REGION === 'CMS') {
           setHammers(2);
-        } else if (REGION == 'TMS') {
+        } else if (REGION === 'TMS') {
           // TMS has 5 "silver hammers" + 1 "golden hammer"
           setHammers(6);
         }
