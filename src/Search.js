@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import {FormLabel, FormGroup, FormControl, Button } from 'react-bootstrap'
+import {Container, Row, Col, FormLabel, FormGroup, FormControl, Button } from 'react-bootstrap'
 
-const REGION = 'GMS', VERSION = 217, MAXNUMITEMS = 5;
+export const REGION = 'GMS', VERSION = 217;
 
 const getItems = (name) => {
   /*
@@ -14,8 +14,7 @@ const getItems = (name) => {
 
   TODO: Handle failed requests (e.g. equips that don't exist in previous versions)
   */
-  const url = `https://maplestory.io/api/${REGION}`
-    + `/${VERSION}/item?searchFor=${name}`;
+  const url = `https://maplestory.io/api/${REGION}/${VERSION}/item?searchFor=${name}`;
   console.log(url);
   
   // Return the promise function that has generatedItemLayouts as part of the promise
@@ -31,17 +30,23 @@ const removeDuplicates = (response) => {
   return Array.from( Object.values(results) );
 }
 
-const generateItemLayouts = (items) => {
+const generateItemLayouts = (items, setTooltipID) => {
   // Parse the list of JSON objects received from API and create array of item layouts
   const layouts = items.map((item) => {
-    let imgURL = `https://maplestory.io/api/${REGION}/` 
-      + `${VERSION}/item/`
-      + `${item.id}/icon`;
+    // TODO: Optimize image loading to load directly from Item object specifically?
+    // This may be overlapping with item-specific tooltip api request
+    let imgURL = `https://maplestory.io/api/${REGION}/${VERSION}/item/${item.id}/icon`;
+
     return (
       // List items should have unique keys, but certain Maple items have multiple IDs
-      <li key={item.id} style={{ listStyleType: "none"}}>
-        {item.name}
-        <img className="body-icons" src={imgURL} alt={item.name} />
+      <li key={item.id} className="body-search-results">
+        {/* Create a button that displays the name and image of the item 
+            and updates the active Item Tooltip ID in Body.js when clicked */}
+        <Button value={item.id} variant="light"
+          onClick={e => setTooltipID(item.id)}> 
+          {item.name}
+          <img className="body-icons" src={imgURL} alt={item.name} />
+        </Button>
       </li>
     );
   });
@@ -49,42 +54,55 @@ const generateItemLayouts = (items) => {
 }
 
 // TODO: make a component for tooltip
-const Search = () => {
+const Search = (props) => {
   // useState returns a accessor variable / setter function pair
   const [name, setName] = useState(null);
   const [items, setItems] = useState(null);
 
-  const onChangeItems = (event) => {
+  const onChangeItems = (event => {
     // getItems returns the fetch promise
     // NOTE: setItems() from useState is visible inside the promise!!!!
     event.preventDefault();
-    console.log("changeItems");
     getItems(name)
       .then(response => response.json()) 
       .then(response => {
-        let resultItems = removeDuplicates(response, MAXNUMITEMS);
-        resultItems = resultItems.slice(0, MAXNUMITEMS); // limit how many items
-        resultItems = generateItemLayouts(resultItems, REGION, VERSION);
+        let resultItems = removeDuplicates(response, props.maxNumItems);
+        resultItems = resultItems.slice(0, props.maxNumItems); // limit how many items
+        resultItems = generateItemLayouts(resultItems, props.setTooltipID);
         setItems(resultItems);
       });
-  };
+  });
 
   return (
-    <div className="body-search">
-      {/* Search for Item form */}
-      <form onSubmit={onChangeItems}> 
-        <FormGroup role="form">
-          <FormLabel>Item Name</FormLabel>
-          <FormControl type="text" placeholder="Fafnir Mercy"
-            onChange={e => setName(e.target.value)} // typing event calls setName function
-          />
-          <Button variant="primary" type="submit"> Search </Button>
-        </FormGroup>
-      </form>
-      {/* Search Results (list of items) */}
-      <ul>
-        {items}
-      </ul>
+    <div>
+      <Container>
+        <Row>
+          <Col>
+            {/* Search for Item form */}
+            <form onSubmit={onChangeItems}> 
+              <FormGroup role="form">
+                <FormLabel>
+                  Item Name
+                </FormLabel>
+                <FormControl type="text" placeholder="Fafnir Mercy"
+                  onChange={e => setName(e.target.value)} // typing event calls setName function
+                />
+              </FormGroup>
+              <Button variant="primary" type="submit"> 
+                Search 
+              </Button>
+            </form>
+          </Col>
+        </Row>
+        <Row>
+          <Col>
+            {/* Search Results (list of items) */}
+            <ul> 
+              {items}
+            </ul>
+          </Col>
+        </Row>
+      </Container>
     </div>
   )
 }

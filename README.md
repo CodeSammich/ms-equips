@@ -11,6 +11,7 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 - [x] Access the maplestory.io API and load equipment images
 - [x] Sort those images/data into a search bar
 - [ ] For each equipment, display text tooltip + stats in simple layout
+- [ ] Allow users to add any "configurable" stats (stars, potentials, flames, scrolls)
 - [ ] Allow users to "equip" the items found
 - [ ] Calculate the appropriate stats and display them
 - [ ] Produce a simple header with Twitch/YT/Github links + space for more tools
@@ -18,6 +19,7 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 # Backlog
 
 - [ ] Augment searchbar with an inventory UI
-- [ ] Generate a fancy in-game tooltip for each equip
 - [ ] Generate several pages of items, instead of just 5 items on one page
 - [ ] Copy the in-game UI for equipment window, inventory window, and tooltip (for search)
+- [ ] Make sure that the components render properly and are spaced properly on various resolutions (especially half-screen / mobile)
+- [ ] Improve search functionality by including more domain knowledge (e.g. common terms, category search, etc.)
