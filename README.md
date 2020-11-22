@@ -8,12 +8,11 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 
 ## Minimum Viable Product (MVP)
 
-- [x] Access the maplestory.io API and load equipment images
+- [x] Access the maplestory.io API and search for only equipment data and images
 - [x] Sort those images/data into a search bar
 - [ ] For each equipment, display text tooltip + stats in simple layout
 - [ ] Allow users to add any "configurable" stats (stars, potentials, flames, scrolls)
-- [ ] Allow users to "equip" the items found
-- [ ] Calculate the appropriate stats and display them
+- [ ] Allow users to "equip" the items found to calculate the appropriate stats and display them
 - [ ] Produce a simple header with Twitch/YT/Github links + space for more tools
 
 # Backlog

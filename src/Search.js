@@ -21,6 +21,18 @@ const getItems = (name) => {
   return fetch(url);
 }
 
+const removeNonEquips = (response) => {
+  // return array s.t. only equips are returned
+  let results = [];
+  response.forEach((item) => {
+    if (item.typeInfo.overallCategory == 'Equip') {
+      results.push(item);
+    }
+  });
+  console.log(results);
+  return results;
+}
+
 const removeDuplicates = (response) => {
   // return array s.t. duplicate items with same item names are removed
   let results = {};
@@ -66,10 +78,11 @@ const Search = (props) => {
     getItems(name)
       .then(response => response.json()) 
       .then(response => {
-        let resultItems = removeDuplicates(response, props.maxNumItems);
-        resultItems = resultItems.slice(0, props.maxNumItems); // limit how many items
-        resultItems = generateItemLayouts(resultItems, props.setTooltipID);
-        setItems(resultItems);
+        let equips = removeNonEquips(response);
+        equips = removeDuplicates(equips);
+        equips = equips.slice(0, props.maxNumItems); // limit how many items
+        let equipsLayouts = generateItemLayouts(equips, props.setTooltipID);
+        setItems(equipsLayouts);
       });
   });
 

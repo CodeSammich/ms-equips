@@ -50,6 +50,7 @@ const ItemTooltip = (props) => {
   const [subcategory, setSubcategory] = useState('');
 
   // User Interface Specific Variables
+  // TODO: Make sure to include state(s) user friendly selection options for various scrolls
   const [starForce, setStarForce] = useState(0);
 
   // Non-potential Stats
