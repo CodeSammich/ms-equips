@@ -39,12 +39,6 @@ const ItemTooltip = (props) => {
   //
   // As a user types in more information, the form should auto-generate the appropriate stats.
 
-  // TODO: Look into Reducers as a way of resetting the states.
-  // Right now, stats are carried over despite having a new itemID. 
-  // Can't reinit all the states in a useEffect because useState cannot be init in there.
-  //
-  // Also, make sure to include Pots/Bpots afterwards.
-
   // General Information
   const [name, setName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
@@ -189,9 +183,161 @@ const ItemTooltip = (props) => {
   // TODO: how to categorize this? May have to invent a separate category for this...
   const [soulStats, setSoulStats] = useState(0);
 
-  useEffect(() => {
+  // Toggle to force useEffect() to re-run
+  const [isReset, setIsReset] = useState(false);
+
+  // Helper Functions
+  const resetAllStates = () => {
+    console.log("Component states have been reset");
+
+    // General Information
+    setName('');
+    setImageUrl('');
+    setRequiredLevel(0);
+    setAttackSpeed(0);
+    setExclusiveEquip(false); // can only equip 1 at a time
+    setSlots(0);                      
+    setHammers(2);                   
+    setCategory('');
+    setSubcategory('');
+
+    // User Interface Specific Variables
+    // TODO: Make sure to include state(s) user friendly selection options for various scrolls
+    setStarForce(0);
+
+    // Non-potential Stats
+    // Strength
+    setBaseStr(0);
+    setFlameStr(0);
+    setStarStr(0);
+    setScrollStr(0);
+
+    // Dexterity
+    setBaseDex(0);
+    setFlameDex(0);
+    setStarDex(0);
+    setScrollDex(0);
+
+    // Intelligence
+    setBaseInt(0);
+    setFlameInt(0);
+    setStarInt(0);
+    setScrollInt(0);
+
+    // Luck
+    setBaseLuk(0);
+    setFlameLuk(0);
+    setStarLuk(0);
+    setScrollLuk(0);
+
+    // Attack
+    setBaseAtt(0);
+    setFlameAtt(0);
+    setStarAtt(0);
+    setScrollAtt(0);
+
+    // Magic Attack
+    setBaseMatt(0);
+    setFlameMatt(0);
+    setStarMatt(0);
+    setScrollMatt(0);
+
+    // Health Points
+    setBaseHP(0);
+    setFlameHP(0);
+    setStarHP(0);
+    setScrollHP(0);
+
+    // Mana Points
+    setBaseMP(0);
+    setFlameMP(0);
+    setStarMP(0);
+    setScrollMP(0);
+
+    // Damage Percent
+    setBaseDmgPercent(0);
+    setFlameDmgPercent(0);
+
+    // Boss Damage Percent
+    setBaseBossDmgPercent(0);
+    setFlameBossDmgPercent(0);
+
+    // Ignore Enemy Defense
+    setBaseIEDPercent(0);
+    setFlameIEDPercent(0);
+
+    // Potential Stats
+    // Percent Stats
+    setPotentialStrPercent(0);
+    setPotentialDexPercent(0);
+    setPotentialIntPercent(0);
+    setPotentialLukPercent(0);
+    setPotentialAllStatPercent(0);
+    setPotentialDmgPercent(0);
+    setPotentialBossDmgPercent(0);
+    setPotentialIEDPercent(0);
+    setPotentialAttPercent(0);
+    setPotentialMattPercent(0);
+    setPotentialHPPercent(0);
+    setPotentialMPPercent(0);
+    setPotentialCritRatePercent(0);
+    setPotentialCritDmgPercent(0);
+    setPotentialDropRatePercent(0);
+    setPotentialMesoRatePercent(0);
+    // Flat Stats
+    setPotentialStrFlat(0);
+    setPotentialDexFlat(0);
+    setPotentialIntFlat(0);
+    setPotentialLukFlat(0);
+    setPotentialAllStatFlat(0);
+    setPotentialDmgFlat(0);
+    setPotentialBossDmgFlat(0);
+    setPotentialIEDFlat(0);
+    setPotentialAttFlat(0);
+    setPotentialMattFlat(0);
+    setPotentialHPFlat(0);
+    setPotentialMPFlat(0);
+
+    // Bonus Potential Stats
+    // Percent Stats
+    setBonusPotentialStrPercent(0);
+    setBonusPotentialDexPercent(0);
+    setBonusPotentialIntPercent(0);
+    setBonusPotentialLukPercent(0);
+    setBonusPotentialAllStatPercent(0);
+    setBonusPotentialDmgPercent(0);
+    setBonusPotentialBossDmgPercent(0);
+    setBonusPotentialIEDPercent(0);
+    setBonusPotentialAttPercent(0);
+    setBonusPotentialMattPercent(0);
+    setBonusPotentialHPPercent(0);
+    setBonusPotentialMPPercent(0);
+    setBonusPotentialCritRatePercent(0);
+    setBonusPotentialCritDmgPercent(0);
+    setBonusPotentialDropRatePercent(0);
+    setBonusPotentialMesoRatePercent(0);
+    // Flat Stats
+    setBonusPotentialStrFlat(0);
+    setBonusPotentialDexFlat(0);
+    setBonusPotentialIntFlat(0);
+    setBonusPotentialLukFlat(0);
+    setBonusPotentialAllStatFlat(0);
+    setBonusPotentialDmgFlat(0);
+    setBonusPotentialBossDmgFlat(0);
+    setBonusPotentialIEDFlat(0);
+    setBonusPotentialAttFlat(0);
+    setBonusPotentialMattFlat(0);
+    setBonusPotentialHPFlat(0);
+    setBonusPotentialMPFlat(0);
+
+    // Soul Stats
+    setSoulStats(0);
+
+    setIsReset(false);
+  };
+
+  const changeHammerDependingOnRegion = () => {
     // Each region has different maximum hammer slots
-    // Should update on refresh or Region change. 
     // Called separately because state may not be updated in time for scrolls state.
     if (props.region === 'KMS') {
       setHammers(1);
@@ -202,12 +348,16 @@ const ItemTooltip = (props) => {
       setHammers(6);
     }
     console.log('region is set and hammers is updated');
-  }, [props.itemID, props.region])
+  }
 
   useEffect(() => {
-    // Reset all the states
+    // Reset all the states since a new item was loaded
+    resetAllStates();
 
-    // Load the basic item information from API and set the state information
+    // Update Hammer information
+    changeHammerDependingOnRegion();
+
+    // Load the basic item information from API and set the new state information
     queryItemStats(props.region, props.version, props.itemID)
       .then(response => response.json())
       .then(item => {
@@ -235,21 +385,28 @@ const ItemTooltip = (props) => {
 
     // Load the item image directly from link
     setImageUrl(`https://maplestory.io/api/${REGION}/${VERSION}/item/${props.itemID}/icon`);
-  }, [props.itemID]);
+  }, [props.itemID, props.region, isReset]);
 
   return (
     <div>
       <Form>
         <FormGroup>
-          {/* Item Name and Image */}
+          {/* Image, Name, Reset Button */}
           <Form.Row>
             <Col xs={1} sm={1} md={1} lg={1} xl={1}>
               <img className="body-large-icons" src={imageUrl} />
             </Col>
-            <Col xs={11} sm={11} md={11} lg={11} xl={11}>
+            <Col xs={9} sm={9} md={9} lg={9} xl={9}>
               <h1>{name}</h1>
             </Col>
+            {/* Reset Button toggles Reset boolean to trigger useEffect() */}
+            <Col xs={1} sm={1} md={1} lg={1} xl={1}>
+              <Button onClick={e => setIsReset(true)}>
+                Reset 
+              </Button>
+            </Col>
           </Form.Row>
+
           {/* Required Level / Attack Speed / Unique Equip / Item Category */}
           <Form.Row>
             <Col>
@@ -273,6 +430,7 @@ const ItemTooltip = (props) => {
               <Form.Control readOnly size="sm" type="text" value={subcategory}/>
             </Col>
           </Form.Row>
+
           {/* Star Force + num/kind of scrolls/hammers applied */}
           <Form.Row>
             <Col>
@@ -285,6 +443,7 @@ const ItemTooltip = (props) => {
             </Col>
             {/* TODO: Include different kinds of scrolls options here */}
           </Form.Row>
+
           {/* Stats Window => Base | Flame | Star Force | Scrolling */}
           <Form.Row>
             <Col xs={1} sm={1} md={1} lg={1} xl={2}>
@@ -353,15 +512,18 @@ const ItemTooltip = (props) => {
               <Form.Control size="sm" type="text" value={scrollMP} onChange={setScrollMP}/>
             </Col>
           </Form.Row>
+
           {/* Put Potential and Bonus Potential on the same row as the other stats? */}
           {/* Potential */}
           <Form.Row>
 
           </Form.Row>
+
           {/* Bonus Potential */}
           <Form.Row>
 
           </Form.Row>
+
           {/* Soul Weapon, if applicable */}
           <Form.Row>
 

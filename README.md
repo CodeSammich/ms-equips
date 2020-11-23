@@ -8,13 +8,24 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 
 ## Minimum Viable Product (MVP)
 
+### Equipment Search / Stats Configuration
+
 - [x] Access the maplestory.io API and search for only equipment data and images
 - [x] Sort those images/data into a search bar
-- [ ] For each equipment, display text tooltip + stats in simple layout
-- [ ] Allow users to add any "configurable" stats (stars, potentials, flames, scrolls)
-- [ ] Allow users to "equip" the items found to calculate the appropriate stats and display them
+- [ ] For each equipment, display stats in simple layout
+- [ ] Allow users to add any "configurable" stats (stars, potentials, flames, scrolls) to each equipment
+
+### Range/Equipment Window
+
+- [ ] Allow users to "equip" the items and to see what items they have equipped
+- [ ] Create important damage categories and calculate range, stats, etc.
+
+### Website Layout
+
+- [x] Create simple header with region select
+- [ ] Automatically determine version or set it manually in the header
 - [ ] Set two tabs, one for equip configuration/search and one for overall views/total range window. One idea is [React Bootstrap Tabs](https://react-bootstrap.github.io/components/tabs/)
-- [ ] Produce a simple header with Twitch/YT/Github links + space for more tools
+- [ ] Produce a simple footer with Twitch/YT/Github links + space for more tools
 
 # Backlog
 
