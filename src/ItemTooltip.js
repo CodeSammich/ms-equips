@@ -2,10 +2,10 @@ import React, { useState, useEffect } from 'react'
 import {Form, Col, FormLabel, FormText, FormGroup, FormControl, Button } from 'react-bootstrap'
 import {REGION, VERSION} from './Search'
 
-const queryItemStats = (itemID) => {
+const queryItemStats = (region, version, itemID) => {
   // Queries maplestory.io API for detailed item information
   // including the stats listed below, icons, etc.
-  let url = `https://maplestory.io/api/${REGION}/${VERSION}/item/${itemID}`;
+  let url = `https://maplestory.io/api/${region}/${version}/item/${itemID}`;
   encodeURI(url);
   return fetch(url);
 }
@@ -46,7 +46,7 @@ const ItemTooltip = (props) => {
   const [attackSpeed, setAttackSpeed] = useState(0);
   const [exclusiveEquip, setExclusiveEquip] = useState(false); // can only equip 1 at a time
   const [slots, setSlots] = useState(0); 
-  const [hammers, setHammers] = useState(0); 
+  const [hammers, setHammers] = useState(2); 
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
 
@@ -174,27 +174,34 @@ const ItemTooltip = (props) => {
   // If no second arg provided, then it will run first time + after any subsequent DOM changes
   // If second argument is provided, it will only run if that argument is not null.
   useEffect(() => {
+    // Each region has different maximum hammer slots
+    // Should update on refresh or Region change. 
+    // Called separately because state may not be updated in time for scrolls state.
+    if (props.region === 'KMS') {
+      setHammers(1);
+    } else if (props.region === 'GMS' || props.region === 'MSEA' || props.region === 'CMS') {
+      setHammers(2);
+    } else if (props.region === 'TMS') {
+      // TMS has 5 "silver hammers" + 1 "golden hammer"
+      setHammers(6);
+    }
+    console.log('region is set and hammers is updated');
+  }, [props.itemID, props.region])
+
+  useEffect(() => {
     // Load the basic item information from API
-    queryItemStats(props.itemID)
+    queryItemStats(props.region, props.version, props.itemID)
       .then(response => response.json())
       .then(item => {
         // Update General Information
         setName(item.description.name);
         setRequiredLevel(item.metaInfo.reqLevel);
-        // Each region has different maximum hammer slots
-        if (REGION === 'KMS') {
-          setHammers(1);
-        } else if (REGION === 'GMS' || REGION === 'MSEA' || REGION === 'CMS') {
-          setHammers(2);
-        } else if (REGION === 'TMS') {
-          // TMS has 5 "silver hammers" + 1 "golden hammer"
-          setHammers(6);
-        }
-        setSlots(item.metaInfo.tuc + hammers);
         setAttackSpeed(item.metaInfo.attackSpeed);
         setExclusiveEquip(item.metaInfo.only);    // unsure if "only" is the right flag
         setCategory(item.typeInfo.category);
         setSubcategory(item.typeInfo.subCategory);
+        console.log(hammers);
+        setSlots(item.metaInfo.tuc + hammers);
 
         // Update Base Stats
         setBaseStr(item.metaInfo.incStr); 
@@ -220,27 +227,47 @@ const ItemTooltip = (props) => {
     <div>
       <Form>
         <FormGroup>
-          {/* Item Name */}
+          {/* Item Name and Image */}
           <Form.Row>
             <Col>
-              <Form.Control>
-                placeholder="Item Name"
-              </Form.Control>
+              <h1>{name}</h1>
+              <img src={imageUrl} />
             </Col>
           </Form.Row>
-          {/* Item Image / Required Level / Item Category */}
+          {/* Required Level / Attack Speed / Unique Equip / Item Category */}
           <Form.Row>
-
+            <Col>
+              <FormLabel> Level </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={requiredLevel}/>
+            </Col>
+            <Col>
+              <FormLabel> Attack Speed </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={attackSpeed}/>
+            </Col>
+            <Col>
+              <FormLabel> Unique Equip </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={exclusiveEquip}/>
+            </Col>
+            <Col>
+              <FormLabel> Category </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={category}/>
+            </Col>
+            <Col>
+              <FormLabel> Subcategory </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={subcategory}/>
+            </Col>
           </Form.Row>
-          {/* Star Force */}
+          {/* Star Force + num/kind of scrolls/hammers applied */}
           <Form.Row>
+            <Col>
 
+            </Col>
+            <Col>
+              <FormLabel> Scrolls Applied </FormLabel>
+              <Form.Control size="sm" type="text" value={slots}/>
+            </Col>
           </Form.Row>
           {/* Stats Window => Base | Flame | Star Force | Scrolling */}
-          <Form.Row>
-
-          </Form.Row>
-          {/* Number/kind of scrolls applied and number of hammers applied */}
           <Form.Row>
 
           </Form.Row>
@@ -258,8 +285,6 @@ const ItemTooltip = (props) => {
           </Form.Row>
         </FormGroup>
       </Form>
-        {name}
-        <img src={imageUrl} />
     </div>
   );
 }

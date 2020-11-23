@@ -13,12 +13,13 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 - [ ] For each equipment, display text tooltip + stats in simple layout
 - [ ] Allow users to add any "configurable" stats (stars, potentials, flames, scrolls)
 - [ ] Allow users to "equip" the items found to calculate the appropriate stats and display them
+- [ ] Set two tabs, one for equip configuration/search and one for overall views/total range window. One idea is [React Bootstrap Tabs](https://react-bootstrap.github.io/components/tabs/)
 - [ ] Produce a simple header with Twitch/YT/Github links + space for more tools
 
 # Backlog
 
 - [ ] Augment searchbar with an inventory UI
 - [ ] Generate several pages of items, instead of just 5 items on one page
-- [ ] Copy the in-game UI for equipment window, inventory window, and tooltip (for search)
+- [ ] Copy the in-game UI or improve general layouts/readability for equipment window, inventory window, and tooltip (for search)
 - [ ] Make sure that the components render properly and are spaced properly on various resolutions (especially half-screen / mobile)
 - [ ] Improve search functionality by including more domain knowledge (e.g. common terms, category search, etc.)

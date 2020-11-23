@@ -1,9 +1,9 @@
+import {Alert, Button, Col, Container, FormControl, FormGroup, FormLabel, Row, Text} from 'react-bootstrap'
 import React, { useState } from 'react'
-import {Container, Row, Col, FormLabel, FormGroup, FormControl, Button } from 'react-bootstrap'
 
 export const REGION = 'GMS', VERSION = 217;
 
-const getItems = (name) => {
+const getItems = (region, version, name) => {
   /*
   Query a list of equipment items from maplestory.io API
     this.props.region: "GMS"
@@ -14,7 +14,7 @@ const getItems = (name) => {
 
   TODO: Handle failed requests (e.g. equips that don't exist in previous versions)
   */
-  let url = `https://maplestory.io/api/${REGION}/${VERSION}/item?searchFor=${name}`;
+  let url = `https://maplestory.io/api/${region}/${version}/item?searchFor=${name}`;
   url = encodeURI(url); // converts spaces to %20, for example
   console.log(url);
   
@@ -23,6 +23,7 @@ const getItems = (name) => {
 }
 
 const removeNonEquips = (response) => {
+  // May end up removing this function because certain equips are not tagged as equips
   // return array s.t. only equips are returned
   let results = [];
   response.forEach((item) => {
@@ -44,12 +45,12 @@ const removeDuplicates = (response) => {
   return Array.from( Object.values(results) );
 }
 
-const generateItemLayouts = (items, setTooltipID) => {
+const generateItemLayouts = (items, setTooltipID, region, version) => {
   // Parse the list of JSON objects received from API and create array of item layouts
   const layouts = items.map((item) => {
     // TODO: Optimize image loading to load directly from Item object specifically?
     // This may be overlapping with item-specific tooltip api request
-    let imgURL = `https://maplestory.io/api/${REGION}/${VERSION}/item/${item.id}/icon`;
+    let imgURL = `https://maplestory.io/api/${region}/${version}/item/${item.id}/icon`;
     imgURL = encodeURI(imgURL);
 
     return (
@@ -78,14 +79,28 @@ const Search = (props) => {
     // getItems returns the fetch promise
     // NOTE: setItems() from useState is visible inside the promise!!!!
     event.preventDefault();
-    getItems(name)
+    getItems(props.region, props.version, name)
       .then(response => response.json()) 
       .then(response => {
         let equips = removeNonEquips(response);
         equips = removeDuplicates(equips);
         equips = equips.slice(0, props.maxNumItems); // limit how many items
-        let equipsLayouts = generateItemLayouts(equips, props.setTooltipID);
-        setItems(equipsLayouts);
+        let equipsLayouts = generateItemLayouts(equips, props.setTooltipID, props.region, props.version);
+        if (equipsLayouts.length > 0) {
+          setItems(equipsLayouts);
+        } else {
+          // No items were found, so send to the catch condition
+          throw Error("Item not found.");
+        }
+      })
+      .catch((error) => {
+        console.log('item not found');
+        setItems(
+          // Update items this with a DNE alert, because API returned 500 error.
+          <Alert className="small-font" variant="danger">
+            Item not found. Please double check region.
+          </Alert>
+        )
       });
   });
 
@@ -95,7 +110,7 @@ const Search = (props) => {
         <Row>
           <Col>
             {/* Search for Item form */}
-            <form onSubmit={onChangeItems}> 
+            <form class="body-search" onSubmit={onChangeItems}> 
               <FormGroup role="form">
                 <FormLabel>
                   Item Name

@@ -13,6 +13,14 @@
   }
 }
 
+.transparent {
+   background: rgba(0,0,0,0);
+}
+
+.small-font {
+  font-size: 2vh;
+}
+
 .App-header {
   background-color: #282c34;
   background-image: url("./images/morass_bg.jpg");
@@ -27,16 +35,40 @@
   color: black;
 }
 
+.App-body {
+  background-color: #282c34;
+  background-image: url("./images/morass_bg.jpg");
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(5px + 2vmin);
+  color: black;
+}
+
+.body-navbar {
+  padding-bottom: 10vh;
+}
+
 .body-icons {
   height: 5vh;
   width: 5vw;
   padding-left: 1vh;
 }
 
+.body-search {
+  align-items: center;
+  padding: 1vh;
+}
+
 .body-search-results {
   display: flex;
   padding: 1vh;
   flex-direction: column;
+  flex-wrap: nowrap;
   align-items: center;
   list-style-type: none;
 }
