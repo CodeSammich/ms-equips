@@ -23,3 +23,8 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 - [ ] Copy the in-game UI or improve general layouts/readability for equipment window, inventory window, and tooltip (for search)
 - [ ] Make sure that the components render properly and are spaced properly on various resolutions (especially half-screen / mobile)
 - [ ] Improve search functionality by including more domain knowledge (e.g. common terms, category search, etc.)
+
+# Future Ideas
+
+- [ ] Support for Familiars, Links, Legion/Union, etc.
+- [ ] Average DPM / projected Dojo floor? Basically "mechanically dependent" tool. Maybe ask user to input a sequence of skills and compare various skill rotations to optimize DPM

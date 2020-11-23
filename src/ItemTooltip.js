@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react'
-import {Form, Col, FormLabel, FormText, FormGroup, FormControl, Button } from 'react-bootstrap'
+import {Button, Col, Form, FormControl, FormGroup, FormLabel, FormText, InputGroup, Text} from 'react-bootstrap'
 import {REGION, VERSION} from './Search'
+import React, { useEffect, useState } from 'react'
 
 const queryItemStats = (region, version, itemID) => {
   // Queries maplestory.io API for detailed item information
@@ -39,14 +39,20 @@ const ItemTooltip = (props) => {
   //
   // As a user types in more information, the form should auto-generate the appropriate stats.
 
+  // TODO: Look into Reducers as a way of resetting the states.
+  // Right now, stats are carried over despite having a new itemID. 
+  // Can't reinit all the states in a useEffect because useState cannot be init in there.
+  //
+  // Also, make sure to include Pots/Bpots afterwards.
+
   // General Information
   const [name, setName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [requiredLevel, setRequiredLevel] = useState(0);
   const [attackSpeed, setAttackSpeed] = useState(0);
   const [exclusiveEquip, setExclusiveEquip] = useState(false); // can only equip 1 at a time
-  const [slots, setSlots] = useState(0); 
-  const [hammers, setHammers] = useState(2); 
+  const [slots, setSlots] = useState(0);                       // TODO: further testing after region support to make sure value is updated at the right time 
+  const [hammers, setHammers] = useState(2);                   // TODO: change this beyond GMS default for all regions
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
 
@@ -102,6 +108,18 @@ const ItemTooltip = (props) => {
   const [flameMP, setFlameMP] = useState(0);
   const [starMP, setStarMP] = useState(0);
   const [scrollMP, setScrollMP] = useState(0);
+
+  // Damage Percent
+  const [baseDmgPercent, setBaseDmgPercent] = useState(0);
+  const [flameDmgPercent, setFlameDmgPercent] = useState(0);
+
+  // Boss Damage Percent
+  const [baseBossDmgPercent, setBaseBossDmgPercent] = useState(0);
+  const [flameBossDmgPercent, setFlameBossDmgPercent] = useState(0);
+
+  // Ignore Enemy Defense
+  const [baseIEDPercent, setBaseIEDPercent] = useState(0);
+  const [flameIEDPercent, setFlameIEDPercent] = useState(0);
 
   // Potential Stats
   // Percent Stats
@@ -171,8 +189,6 @@ const ItemTooltip = (props) => {
   // TODO: how to categorize this? May have to invent a separate category for this...
   const [soulStats, setSoulStats] = useState(0);
 
-  // If no second arg provided, then it will run first time + after any subsequent DOM changes
-  // If second argument is provided, it will only run if that argument is not null.
   useEffect(() => {
     // Each region has different maximum hammer slots
     // Should update on refresh or Region change. 
@@ -189,7 +205,9 @@ const ItemTooltip = (props) => {
   }, [props.itemID, props.region])
 
   useEffect(() => {
-    // Load the basic item information from API
+    // Reset all the states
+
+    // Load the basic item information from API and set the state information
     queryItemStats(props.region, props.version, props.itemID)
       .then(response => response.json())
       .then(item => {
@@ -200,27 +218,23 @@ const ItemTooltip = (props) => {
         setExclusiveEquip(item.metaInfo.only);    // unsure if "only" is the right flag
         setCategory(item.typeInfo.category);
         setSubcategory(item.typeInfo.subCategory);
-        console.log(hammers);
         setSlots(item.metaInfo.tuc + hammers);
 
         // Update Base Stats
-        setBaseStr(item.metaInfo.incStr); 
-        setBaseDex(item.metaInfo.incDex);
-        setBaseInt(item.metaInfo.incInt); 
-        setBaseLuk(item.metaInfo.incLuk);
-        setBaseHP(item.metaInfo.incHP); 
-        setBaseMP(item.metaInfo.incMP);
+        setBaseStr(item.metaInfo.incSTR); 
+        setBaseDex(item.metaInfo.incDEX);
+        setBaseInt(item.metaInfo.incINT); 
+        setBaseLuk(item.metaInfo.incLUK);
+        setBaseHP(item.metaInfo.incMHP); 
+        setBaseMP(item.metaInfo.incMMP);
         setBaseAtt(item.metaInfo.incPAD); 
         setBaseMatt(item.metaInfo.incMAD);
+        setBaseBossDmgPercent(item.metaInfo.bdR);
+        setBaseIEDPercent(item.metaInfo.imdR);
       });
 
     // Load the item image directly from link
     setImageUrl(`https://maplestory.io/api/${REGION}/${VERSION}/item/${props.itemID}/icon`);
-
-    // Update state with base stats accordingly
-
-    // Account for user adjustable parameters (likely in return)
-    // Don't forget that users should just adjust large knobs (e.g. Star Force, flames, etc.)
   }, [props.itemID]);
 
   return (
@@ -229,9 +243,11 @@ const ItemTooltip = (props) => {
         <FormGroup>
           {/* Item Name and Image */}
           <Form.Row>
-            <Col>
+            <Col xs={1} sm={1} md={1} lg={1} xl={1}>
+              <img className="body-large-icons" src={imageUrl} />
+            </Col>
+            <Col xs={11} sm={11} md={11} lg={11} xl={11}>
               <h1>{name}</h1>
-              <img src={imageUrl} />
             </Col>
           </Form.Row>
           {/* Required Level / Attack Speed / Unique Equip / Item Category */}
@@ -260,17 +276,84 @@ const ItemTooltip = (props) => {
           {/* Star Force + num/kind of scrolls/hammers applied */}
           <Form.Row>
             <Col>
-
+              <FormLabel> Star Force </FormLabel>
+              <Form.Control size="sm" type="text" value={starForce} onChange={setStarForce}/>
             </Col>
             <Col>
               <FormLabel> Scrolls Applied </FormLabel>
-              <Form.Control size="sm" type="text" value={slots}/>
+              <Form.Control size="sm" type="text" value={slots} onChange={setSlots}/>
             </Col>
+            {/* TODO: Include different kinds of scrolls options here */}
           </Form.Row>
           {/* Stats Window => Base | Flame | Star Force | Scrolling */}
           <Form.Row>
-
+            <Col xs={1} sm={1} md={1} lg={1} xl={2}>
+              {/* Left-hand description of various stats */}
+              <FormLabel size="sm"> Stats </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value="STR"/>
+              <Form.Control readOnly size="sm" type="text" value="DEX"/>
+              <Form.Control readOnly size="sm" type="text" value="INT"/>
+              <Form.Control readOnly size="sm" type="text" value="LUK"/>
+              <Form.Control readOnly size="sm" type="text" value="ATT"/>
+              <Form.Control readOnly size="sm" type="text" value="MATT"/>
+              <Form.Control readOnly size="sm" type="text" value="HP"/>
+              <Form.Control readOnly size="sm" type="text" value="MP"/>
+              <Form.Control readOnly size="sm" type="text" value="DMG%"/>
+              <Form.Control readOnly size="sm" type="text" value="BOSS%"/>
+              <Form.Control readOnly size="sm" type="text" value="IED"/>
+            </Col>
+            <Col>
+              <FormLabel> Base </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={baseStr}/>
+              <Form.Control readOnly size="sm" type="text" value={baseDex}/>
+              <Form.Control readOnly size="sm" type="text" value={baseInt}/>
+              <Form.Control readOnly size="sm" type="text" value={baseLuk}/>
+              <Form.Control readOnly size="sm" type="text" value={baseAtt}/>
+              <Form.Control readOnly size="sm" type="text" value={baseMatt}/>
+              <Form.Control readOnly size="sm" type="text" value={baseHP}/>
+              <Form.Control readOnly size="sm" type="text" value={baseMP}/>
+              <Form.Control readOnly size="sm" type="text" value={baseDmgPercent}/>
+              <Form.Control readOnly size="sm" type="text" value={baseBossDmgPercent}/>
+              <Form.Control readOnly size="sm" type="text" value={baseIEDPercent}/>
+            </Col>
+            <Col>
+              <FormLabel> Flames </FormLabel>
+              <Form.Control size="sm" type="text" value={flameStr} onChange={setFlameStr}/>
+              <Form.Control size="sm" type="text" value={flameDex} onChange={setFlameDex}/>
+              <Form.Control size="sm" type="text" value={flameInt} onChange={setFlameInt}/>
+              <Form.Control size="sm" type="text" value={flameLuk} onChange={setFlameLuk}/>
+              <Form.Control size="sm" type="text" value={flameAtt} onChange={setFlameAtt}/>
+              <Form.Control size="sm" type="text" value={flameMatt} onChange={setFlameMatt}/>
+              <Form.Control size="sm" type="text" value={flameHP} onChange={setFlameHP}/>
+              <Form.Control size="sm" type="text" value={flameMP} onChange={setFlameMP}/>
+              <Form.Control size="sm" type="text" value={flameDmgPercent} onChange={setFlameDmgPercent}/>
+              <Form.Control size="sm" type="text" value={flameBossDmgPercent} onChange={setFlameBossDmgPercent}/>
+              <Form.Control size="sm" type="text" value={flameIEDPercent} onChange={setFlameIEDPercent}/>
+            </Col>
+            <Col>
+              <FormLabel> Star Force </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={starStr}/>
+              <Form.Control readOnly size="sm" type="text" value={starDex}/>
+              <Form.Control readOnly size="sm" type="text" value={starInt}/>
+              <Form.Control readOnly size="sm" type="text" value={starLuk}/>
+              <Form.Control readOnly size="sm" type="text" value={starAtt}/>
+              <Form.Control readOnly size="sm" type="text" value={starMatt}/>
+              <Form.Control readOnly size="sm" type="text" value={starHP}/>
+              <Form.Control readOnly size="sm" type="text" value={starMP}/>
+            </Col>
+            <Col>
+              <FormLabel> Scrolls </FormLabel>
+              <Form.Control size="sm" type="text" value={scrollStr} onChange={setScrollStr}/>
+              <Form.Control size="sm" type="text" value={scrollDex} onChange={setScrollDex}/>
+              <Form.Control size="sm" type="text" value={scrollInt} onChange={setScrollInt}/>
+              <Form.Control size="sm" type="text" value={scrollLuk} onChange={setScrollLuk}/>
+              <Form.Control size="sm" type="text" value={scrollAtt} onChange={setScrollAtt}/>
+              <Form.Control size="sm" type="text" value={scrollMatt} onChange={setScrollMatt}/>
+              <Form.Control size="sm" type="text" value={scrollHP} onChange={setScrollHP}/>
+              <Form.Control size="sm" type="text" value={scrollMP} onChange={setScrollMP}/>
+            </Col>
           </Form.Row>
+          {/* Put Potential and Bonus Potential on the same row as the other stats? */}
           {/* Potential */}
           <Form.Row>
 

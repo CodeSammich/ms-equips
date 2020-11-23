@@ -14,7 +14,7 @@
 }
 
 .transparent {
-   background: rgba(0,0,0,0);
+   background: rgba(0,0,0,1);
 }
 
 .small-font {
@@ -55,8 +55,14 @@
 
 .body-icons {
   height: 5vh;
-  width: 5vw;
+  width: 5vh;
   padding-left: 1vh;
+}
+
+.body-large-icons {
+  height: 8vh;
+  width: 8vh;
+  padding-right: 1vw;
 }
 
 .body-search {
