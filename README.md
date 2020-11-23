@@ -23,7 +23,7 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 ### Website Layout
 
 - [x] Create simple header with region select
-- [ ] Automatically determine version or set it manually in the header
+- [ ] Automatically determine latest version number based on region or set it manually in the header
 - [ ] Set two tabs, one for equip configuration/search and one for overall views/total range window. One idea is [React Bootstrap Tabs](https://react-bootstrap.github.io/components/tabs/)
 - [ ] Produce a simple footer with Twitch/YT/Github links + space for more tools
 
