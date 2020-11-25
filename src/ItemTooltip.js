@@ -1,6 +1,8 @@
-import {Button, Col, Form, FormControl, FormGroup, FormLabel, FormText, InputGroup, Text} from 'react-bootstrap'
+import {Button, Col, Dropdown, DropdownButton, Form, FormControl, FormGroup, FormLabel, FormText, InputGroup, Text} from 'react-bootstrap'
 import {REGION, VERSION} from './Search'
 import React, { useEffect, useState } from 'react'
+
+import PotentialLine from './PotentialLine'
 
 const queryItemStats = (region, version, itemID) => {
   // Queries maplestory.io API for detailed item information
@@ -38,6 +40,8 @@ const ItemTooltip = (props) => {
   //          custom input their desired scrolling stats (e.g. Chaos scrolls)
   //
   // As a user types in more information, the form should auto-generate the appropriate stats.
+  //
+  // TODO: Cooldown Reduction potential lines should also be added in case we do a damage calculator in the future.
 
   // General Information
   const [name, setName] = useState('');
@@ -79,6 +83,9 @@ const ItemTooltip = (props) => {
   const [starLuk, setStarLuk] = useState(0);
   const [scrollLuk, setScrollLuk] = useState(0);
 
+  // All Stat
+  const [flameAllStatPercent, setFlameAllStatPercent] = useState(0);
+
   // Attack
   const [baseAtt, setBaseAtt] = useState(0);
   const [flameAtt, setFlameAtt] = useState(0);
@@ -115,78 +122,72 @@ const ItemTooltip = (props) => {
   const [baseIEDPercent, setBaseIEDPercent] = useState(0);
   const [flameIEDPercent, setFlameIEDPercent] = useState(0);
 
-  // Potential Stats
-  // Percent Stats
-  const [potentialStrPercent, setPotentialStrPercent] = useState(0);
-  const [potentialDexPercent, setPotentialDexPercent] = useState(0);
-  const [potentialIntPercent, setPotentialIntPercent] = useState(0);
-  const [potentialLukPercent, setPotentialLukPercent] = useState(0);
-  const [potentialAllStatPercent, setPotentialAllStatPercent] = useState(0);
-  const [potentialDmgPercent, setPotentialDmgPercent] = useState(0);
-  const [potentialBossDmgPercent, setPotentialBossDmgPercent] = useState(0);
-  const [potentialIEDPercent, setPotentialIEDPercent] = useState(0);
-  const [potentialAttPercent, setPotentialAttPercent] = useState(0);
-  const [potentialMattPercent, setPotentialMattPercent] = useState(0);
-  const [potentialHPPercent, setPotentialHPPercent] = useState(0);
-  const [potentialMPPercent, setPotentialMPPercent] = useState(0);
-  const [potentialCritRatePercent, setPotentialCritRatePercent] = useState(0);
-  const [potentialCritDmgPercent, setPotentialCritDmgPercent] = useState(0);
-  const [potentialDropRatePercent, setPotentialDropRatePercent] = useState(0);
-  const [potentialMesoRatePercent, setPotentialMesoRatePercent] = useState(0);
-  // Flat Stats
-  const [potentialStrFlat, setPotentialStrFlat] = useState(0);
-  const [potentialDexFlat, setPotentialDexFlat] = useState(0);
-  const [potentialIntFlat, setPotentialIntFlat] = useState(0);
-  const [potentialLukFlat, setPotentialLukFlat] = useState(0);
-  const [potentialAllStatFlat, setPotentialAllStatFlat] = useState(0);
-  const [potentialDmgFlat, setPotentialDmgFlat] = useState(0);
-  const [potentialBossDmgFlat, setPotentialBossDmgFlat] = useState(0);
-  const [potentialIEDFlat, setPotentialIEDFlat] = useState(0);
-  const [potentialAttFlat, setPotentialAttFlat] = useState(0);
-  const [potentialMattFlat, setPotentialMattFlat] = useState(0);
-  const [potentialHPFlat, setPotentialHPFlat] = useState(0);
-  const [potentialMPFlat, setPotentialMPFlat] = useState(0);
+  // Initial state to store Potentials. This also applies equally to Bonus Potentials
+  // Primarily for use in child component PotentialLine, because there are very many menu items that need to be selected
+  // So the state inside the child component is handling all permutations of potential settings
+  // while rendering as few Dropdown/Control components as possible.
+  //
+  // tldr; Separating into separate component because there will only ever be 6 potentials that use only a subset of these fields.
+  let initialPotentialState = {
+    // Potential Stats
+    // Percent Stats
+    potentialStrPercent: 0,
+    potentialDexPercent: 0,
+    potentialIntPercent: 0,
+    potentialLukPercent: 0,
+    potentialAllStatPercent: 0,
+    potentialDmgPercent: 0,
+    potentialBossDmgPercent: 0,
+    potentialIEDPercent: 0,
+    potentialAttPercent: 0,
+    potentialMattPercent: 0,
+    potentialHPPercent: 0,
+    potentialMPPercent: 0,
+    potentialCritRatePercent: 0,
+    potentialCritDmgPercent: 0,
+    potentialDropRatePercent: 0,
+    potentialMesoRatePercent: 0,
+    // Flat Stats
+    potentialStrFlat: 0,
+    potentialDexFlat: 0,
+    potentialIntFlat: 0,
+    potentialLukFlat: 0,
+    potentialAllStatFlat: 0,
+    potentialAttFlat: 0,
+    potentialMattFlat: 0,
+    potentialHPFlat: 0,
+    potentialMPFlat: 0,
+    // Special Stats
+    potentialCDR: 0,
+    // Special Stats only for Bonus Potential
+    potential1StrPerTenLevel: 0,
+    potential1DexPerTenLevel: 0,
+    potential1IntPerTenLevel: 0,
+    potential1LukPerTenLevel: 0,
+    potential2StrPerTenLevel: 0,
+    potential2DexPerTenLevel: 0,
+    potential2IntPerTenLevel: 0,
+    potential2LukPerTenLevel: 0
+  };
 
-  // Bonus Potential Stats
-  // Percent Stats
-  const [bonusPotentialStrPercent, setBonusPotentialStrPercent] = useState(0);
-  const [bonusPotentialDexPercent, setBonusPotentialDexPercent] = useState(0);
-  const [bonusPotentialIntPercent, setBonusPotentialIntPercent] = useState(0);
-  const [bonusPotentialLukPercent, setBonusPotentialLukPercent] = useState(0);
-  const [bonusPotentialAllStatPercent, setBonusPotentialAllStatPercent] = useState(0);
-  const [bonusPotentialDmgPercent, setBonusPotentialDmgPercent] = useState(0);
-  const [bonusPotentialBossDmgPercent, setBonusPotentialBossDmgPercent] = useState(0);
-  const [bonusPotentialIEDPercent, setBonusPotentialIEDPercent] = useState(0);
-  const [bonusPotentialAttPercent, setBonusPotentialAttPercent] = useState(0);
-  const [bonusPotentialMattPercent, setBonusPotentialMattPercent] = useState(0);
-  const [bonusPotentialHPPercent, setBonusPotentialHPPercent] = useState(0);
-  const [bonusPotentialMPPercent, setBonusPotentialMPPercent] = useState(0);
-  const [bonusPotentialCritRatePercent, setBonusPotentialCritRatePercent] = useState(0);
-  const [bonusPotentialCritDmgPercent, setBonusPotentialCritDmgPercent] = useState(0);
-  const [bonusPotentialDropRatePercent, setBonusPotentialDropRatePercent] = useState(0);
-  const [bonusPotentialMesoRatePercent, setBonusPotentialMesoRatePercent] = useState(0);
-  // Flat Stats
-  const [bonusPotentialStrFlat, setBonusPotentialStrFlat] = useState(0);
-  const [bonusPotentialDexFlat, setBonusPotentialDexFlat] = useState(0);
-  const [bonusPotentialIntFlat, setBonusPotentialIntFlat] = useState(0);
-  const [bonusPotentialLukFlat, setBonusPotentialLukFlat] = useState(0);
-  const [bonusPotentialAllStatFlat, setBonusPotentialAllStatFlat] = useState(0);
-  const [bonusPotentialDmgFlat, setBonusPotentialDmgFlat] = useState(0);
-  const [bonusPotentialBossDmgFlat, setBonusPotentialBossDmgFlat] = useState(0);
-  const [bonusPotentialIEDFlat, setBonusPotentialIEDFlat] = useState(0);
-  const [bonusPotentialAttFlat, setBonusPotentialAttFlat] = useState(0);
-  const [bonusPotentialMattFlat, setBonusPotentialMattFlat] = useState(0);
-  const [bonusPotentialHPFlat, setBonusPotentialHPFlat] = useState(0);
-  const [bonusPotentialMPFlat, setBonusPotentialMPFlat] = useState(0);
+  // Helper Functions / Variables
+  // Potential / Bonus Potential states
+  //
+  // Should hold all the possible potential stat in 1 state which PotentialLine
+  // can update based on what stat the user chose
+  const [potentialLine1, setPotentialLine1] = useState(initialPotentialState);
+  const [potentialLine2, setPotentialLine2] = useState(initialPotentialState);
+  const [potentialLine3, setPotentialLine3] = useState(initialPotentialState);
+  const [bonusPotentialLine1, setBonusPotentialLine1] = useState(initialPotentialState);
+  const [bonusPotentialLine2, setBonusPotentialLine2] = useState(initialPotentialState);
+  const [bonusPotentialLine3, setBonusPotentialLine3] = useState(initialPotentialState);
 
   // Soul Stats
   // TODO: how to categorize this? May have to invent a separate category for this...
   const [soulStats, setSoulStats] = useState(0);
 
-  // Toggle to force useEffect() to re-run
+  // Toggle to force useEffect() to re-run and reset all the states
   const [isReset, setIsReset] = useState(false);
-
-  // Helper Functions
   const resetAllStates = () => {
     console.log("Component states have been reset");
 
@@ -230,6 +231,9 @@ const ItemTooltip = (props) => {
     setStarLuk(0);
     setScrollLuk(0);
 
+    // All Stat % Flame
+    setFlameAllStatPercent(0);
+
     // Attack
     setBaseAtt(0);
     setFlameAtt(0);
@@ -266,69 +270,13 @@ const ItemTooltip = (props) => {
     setBaseIEDPercent(0);
     setFlameIEDPercent(0);
 
-    // Potential Stats
-    // Percent Stats
-    setPotentialStrPercent(0);
-    setPotentialDexPercent(0);
-    setPotentialIntPercent(0);
-    setPotentialLukPercent(0);
-    setPotentialAllStatPercent(0);
-    setPotentialDmgPercent(0);
-    setPotentialBossDmgPercent(0);
-    setPotentialIEDPercent(0);
-    setPotentialAttPercent(0);
-    setPotentialMattPercent(0);
-    setPotentialHPPercent(0);
-    setPotentialMPPercent(0);
-    setPotentialCritRatePercent(0);
-    setPotentialCritDmgPercent(0);
-    setPotentialDropRatePercent(0);
-    setPotentialMesoRatePercent(0);
-    // Flat Stats
-    setPotentialStrFlat(0);
-    setPotentialDexFlat(0);
-    setPotentialIntFlat(0);
-    setPotentialLukFlat(0);
-    setPotentialAllStatFlat(0);
-    setPotentialDmgFlat(0);
-    setPotentialBossDmgFlat(0);
-    setPotentialIEDFlat(0);
-    setPotentialAttFlat(0);
-    setPotentialMattFlat(0);
-    setPotentialHPFlat(0);
-    setPotentialMPFlat(0);
-
-    // Bonus Potential Stats
-    // Percent Stats
-    setBonusPotentialStrPercent(0);
-    setBonusPotentialDexPercent(0);
-    setBonusPotentialIntPercent(0);
-    setBonusPotentialLukPercent(0);
-    setBonusPotentialAllStatPercent(0);
-    setBonusPotentialDmgPercent(0);
-    setBonusPotentialBossDmgPercent(0);
-    setBonusPotentialIEDPercent(0);
-    setBonusPotentialAttPercent(0);
-    setBonusPotentialMattPercent(0);
-    setBonusPotentialHPPercent(0);
-    setBonusPotentialMPPercent(0);
-    setBonusPotentialCritRatePercent(0);
-    setBonusPotentialCritDmgPercent(0);
-    setBonusPotentialDropRatePercent(0);
-    setBonusPotentialMesoRatePercent(0);
-    // Flat Stats
-    setBonusPotentialStrFlat(0);
-    setBonusPotentialDexFlat(0);
-    setBonusPotentialIntFlat(0);
-    setBonusPotentialLukFlat(0);
-    setBonusPotentialAllStatFlat(0);
-    setBonusPotentialDmgFlat(0);
-    setBonusPotentialBossDmgFlat(0);
-    setBonusPotentialIEDFlat(0);
-    setBonusPotentialAttFlat(0);
-    setBonusPotentialMattFlat(0);
-    setBonusPotentialHPFlat(0);
-    setBonusPotentialMPFlat(0);
+    // Potentials
+    setPotentialLine1(initialPotentialState);
+    setPotentialLine2(initialPotentialState);
+    setPotentialLine3(initialPotentialState);
+    setBonusPotentialLine1(initialPotentialState);
+    setBonusPotentialLine2(initialPotentialState);
+    setBonusPotentialLine3(initialPotentialState);
 
     // Soul Stats
     setSoulStats(0);
@@ -435,11 +383,11 @@ const ItemTooltip = (props) => {
           <Form.Row>
             <Col>
               <FormLabel> Star Force </FormLabel>
-              <Form.Control size="sm" type="text" value={starForce} onChange={setStarForce}/>
+              <Form.Control size="sm" type="text" value={starForce} onChange={e => setStarForce(e.target.value)}/>
             </Col>
             <Col>
               <FormLabel> Scrolls Applied </FormLabel>
-              <Form.Control size="sm" type="text" value={slots} onChange={setSlots}/>
+              <Form.Control size="sm" type="text" value={slots} onChange={e => setSlots(e.target.value)}/>
             </Col>
             {/* TODO: Include different kinds of scrolls options here */}
           </Form.Row>
@@ -460,6 +408,7 @@ const ItemTooltip = (props) => {
               <Form.Control readOnly size="sm" type="text" value="DMG%"/>
               <Form.Control readOnly size="sm" type="text" value="BOSS%"/>
               <Form.Control readOnly size="sm" type="text" value="IED"/>
+              <Form.Control readOnly size="sm" type="text" value="All Stat %"/>
             </Col>
             <Col>
               <FormLabel> Base </FormLabel>
@@ -474,20 +423,23 @@ const ItemTooltip = (props) => {
               <Form.Control readOnly size="sm" type="text" value={baseDmgPercent}/>
               <Form.Control readOnly size="sm" type="text" value={baseBossDmgPercent}/>
               <Form.Control readOnly size="sm" type="text" value={baseIEDPercent}/>
+              {/* All Stat % doesn't actually exist as a base stat in any equip, but I'm leaving it here for aesthetic purposes. */}
+              <Form.Control readOnly size="sm" type="text" value={0}/> 
             </Col>
             <Col>
               <FormLabel> Flames </FormLabel>
-              <Form.Control size="sm" type="text" value={flameStr} onChange={setFlameStr}/>
-              <Form.Control size="sm" type="text" value={flameDex} onChange={setFlameDex}/>
-              <Form.Control size="sm" type="text" value={flameInt} onChange={setFlameInt}/>
-              <Form.Control size="sm" type="text" value={flameLuk} onChange={setFlameLuk}/>
-              <Form.Control size="sm" type="text" value={flameAtt} onChange={setFlameAtt}/>
-              <Form.Control size="sm" type="text" value={flameMatt} onChange={setFlameMatt}/>
-              <Form.Control size="sm" type="text" value={flameHP} onChange={setFlameHP}/>
-              <Form.Control size="sm" type="text" value={flameMP} onChange={setFlameMP}/>
-              <Form.Control size="sm" type="text" value={flameDmgPercent} onChange={setFlameDmgPercent}/>
-              <Form.Control size="sm" type="text" value={flameBossDmgPercent} onChange={setFlameBossDmgPercent}/>
-              <Form.Control size="sm" type="text" value={flameIEDPercent} onChange={setFlameIEDPercent}/>
+              <Form.Control size="sm" type="text" value={flameStr} onChange={e => setFlameStr(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameDex} onChange={e => setFlameDex(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameInt} onChange={e => setFlameInt(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameLuk} onChange={e => setFlameLuk(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameAtt} onChange={e => setFlameAtt(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameMatt} onChange={e => setFlameMatt(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameHP} onChange={e => setFlameHP(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameMP} onChange={e => setFlameMP(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameDmgPercent} onChange={e => setFlameDmgPercent(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameBossDmgPercent} onChange={e => setFlameBossDmgPercent(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameIEDPercent} onChange={e => setFlameIEDPercent(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={flameAllStatPercent} onChange={e => setFlameAllStatPercent(e.target.value)}/>
             </Col>
             <Col>
               <FormLabel> Star Force </FormLabel>
@@ -502,26 +454,55 @@ const ItemTooltip = (props) => {
             </Col>
             <Col>
               <FormLabel> Scrolls </FormLabel>
-              <Form.Control size="sm" type="text" value={scrollStr} onChange={setScrollStr}/>
-              <Form.Control size="sm" type="text" value={scrollDex} onChange={setScrollDex}/>
-              <Form.Control size="sm" type="text" value={scrollInt} onChange={setScrollInt}/>
-              <Form.Control size="sm" type="text" value={scrollLuk} onChange={setScrollLuk}/>
-              <Form.Control size="sm" type="text" value={scrollAtt} onChange={setScrollAtt}/>
-              <Form.Control size="sm" type="text" value={scrollMatt} onChange={setScrollMatt}/>
-              <Form.Control size="sm" type="text" value={scrollHP} onChange={setScrollHP}/>
-              <Form.Control size="sm" type="text" value={scrollMP} onChange={setScrollMP}/>
+              <Form.Control size="sm" type="text" value={scrollStr} onChange={e => setScrollStr(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollDex} onChange={e => setScrollDex(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollInt} onChange={e => setScrollInt(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollLuk} onChange={e => setScrollLuk(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollAtt} onChange={e => setScrollAtt(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollMatt} onChange={e => setScrollMatt(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollHP} onChange={e => setScrollHP(e.target.value)}/>
+              <Form.Control size="sm" type="text" value={scrollMP} onChange={e => setScrollMP(e.target.value)}/>
             </Col>
           </Form.Row>
 
-          {/* Put Potential and Bonus Potential on the same row as the other stats? */}
-          {/* Potential */}
+          {/* Potential, Bonus Potential */}
           <Form.Row>
-
-          </Form.Row>
-
-          {/* Bonus Potential */}
-          <Form.Row>
-
+            <Col>
+              <FormLabel> Potential </FormLabel>
+              <PotentialLine 
+                name = 'Line 1'
+                potentialLine = {potentialLine1}
+                setPotentialLine = {setPotentialLine1}
+              />
+              <PotentialLine 
+                name = 'Line 2'
+                potentialLine = {potentialLine2}
+                setPotentialLine = {setPotentialLine2}
+              />
+              <PotentialLine 
+                name = 'Line 3'
+                potentialLine = {potentialLine3}
+                setPotentialLine = {setPotentialLine3}
+              />
+            </Col>
+            <Col>
+              <FormLabel> Bonus Potential </FormLabel>
+              <PotentialLine 
+                name = 'Line 1'
+                potentialLine = {bonusPotentialLine1}
+                setPotentialLine = {setBonusPotentialLine1}
+              />
+              <PotentialLine 
+                name = 'Line 2'
+                potentialLine = {bonusPotentialLine2}
+                setPotentialLine = {setBonusPotentialLine2}
+              />
+              <PotentialLine 
+                name = 'Line 3'
+                potentialLine = {bonusPotentialLine3}
+                setPotentialLine = {setBonusPotentialLine3}
+              />
+            </Col>
           </Form.Row>
 
           {/* Soul Weapon, if applicable */}

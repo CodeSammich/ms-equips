@@ -12,7 +12,7 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 
 - [x] Access the maplestory.io API and search for only equipment data and images
 - [x] Sort those images/data into a search bar
-- [ ] For each equipment, display stats in simple layout
+- [x] For each equipment, display stats in simple layout
 - [ ] Allow users to add any "configurable" stats (stars, potentials, flames, scrolls) to each equipment
 
 ### Range/Equipment Window
@@ -27,6 +27,10 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 - [ ] Set two tabs, one for equip configuration/search and one for overall views/total range window. One idea is [React Bootstrap Tabs](https://react-bootstrap.github.io/components/tabs/)
 - [ ] Produce a simple footer with Twitch/YT/Github links + space for more tools
 
+### Defensive Programming
+
+- [ ] Make sure all form inputs are properly cleaned and standard defensive techniques are used for all Forms / Buttons
+
 # Backlog
 
 - [ ] Augment searchbar with an inventory UI
@@ -39,3 +43,4 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 
 - [ ] Support for Familiars, Links, Legion/Union, etc.
 - [ ] Average DPM / projected Dojo floor? Basically "mechanically dependent" tool. Maybe ask user to input a sequence of skills and compare various skill rotations to optimize DPM
+- [ ] Translate the website into the region's language (e.g. KMS -> Korean)

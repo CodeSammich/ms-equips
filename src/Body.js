@@ -15,8 +15,8 @@ const Body = () => {
       Currently meant to be the main body
       Should probably add/refactor a header menu or a footer credits 
     */
-    <body className="App-header">
-      <Container fluid className="vh-100">
+    <body className="App-body">
+      <Container fluid>
         <Row>
           {/* Screen is divided in 12 sections. Each tag (xs, sm..) => screen sizes */}
           <RegionSelect region={region} setRegion={setRegion} version={version} setVersion={setVersion} />
