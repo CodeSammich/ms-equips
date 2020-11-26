@@ -16,7 +16,6 @@ const getItems = (region, version, name) => {
   */
   let url = `https://maplestory.io/api/${region}/${version}/item?searchFor=${name}`;
   url = encodeURI(url); // converts spaces to %20, for example
-  console.log(url);
   
   // Return the promise function that has generatedItemLayouts as part of the promise
   return fetch(url);
@@ -32,7 +31,6 @@ const removeNonEquips = (response) => {
       results.push(item);
     }
   });
-  console.log(results);
   return results;
 }
 
@@ -94,7 +92,6 @@ const Search = (props) => {
         }
       })
       .catch((error) => {
-        console.log('item not found');
         setItems(
           // Update items this with a DNE alert, because API returned 500 error.
           <Alert className="small-font" variant="danger">

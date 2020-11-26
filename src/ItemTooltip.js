@@ -188,8 +188,6 @@ const ItemTooltip = (props) => {
   // Toggle to force useEffect() to re-run and reset all the states
   const [isReset, setIsReset] = useState(false);
   const resetAllStates = () => {
-    console.log("Component states have been reset");
-
     // General Information
     setName('');
     setImageUrl('');
@@ -294,7 +292,6 @@ const ItemTooltip = (props) => {
       // TMS has 5 "silver hammers" + 1 "golden hammer"
       setHammers(6);
     }
-    console.log('region is set and hammers is updated');
   }
 
   useEffect(() => {
