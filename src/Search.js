@@ -119,7 +119,7 @@ const Search = (props) => {
                   onChange={e => setName(e.target.value)} // typing event calls setName function
                 />
               </FormGroup>
-              <Button variant="primary" type="submit"> 
+              <Button variant="dark" type="submit"> 
                 Search 
               </Button>
             </form>

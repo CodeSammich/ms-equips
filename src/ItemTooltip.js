@@ -40,8 +40,6 @@ const ItemTooltip = (props) => {
   //          custom input their desired scrolling stats (e.g. Chaos scrolls)
   //
   // As a user types in more information, the form should auto-generate the appropriate stats.
-  //
-  // TODO: Cooldown Reduction potential lines should also be added in case we do a damage calculator in the future.
 
   // General Information
   const [name, setName] = useState('');
@@ -56,6 +54,7 @@ const ItemTooltip = (props) => {
 
   // User Interface Specific Variables
   // TODO: Make sure to include state(s) user friendly selection options for various scrolls
+  // TODO: Make sure to compute star force stats and update the SF readonly fields appropriately
   const [starForce, setStarForce] = useState(0);
 
   // Non-potential Stats
@@ -349,7 +348,7 @@ const ItemTooltip = (props) => {
             </Col>
             {/* Reset Button toggles Reset boolean to trigger useEffect() */}
             <Col xs={1} sm={1} md={1} lg={1} xl={1}>
-              <Button onClick={e => setIsReset(true)}>
+              <Button variant="dark" onClick={e => setIsReset(true)}>
                 Reset 
               </Button>
             </Col>

@@ -1,4 +1,4 @@
-import {Col, Dropdown, DropdownButton, Form} from 'react-bootstrap'
+import {Col, Dropdown, DropdownButton, Form, InputGroup} from 'react-bootstrap'
 import React, {useState} from 'react'
 
 const PotentialLine = (props) => {
@@ -32,9 +32,9 @@ const PotentialLine = (props) => {
 
   return (
     <React.Fragment>
-      <Col>
-        {/* Save the user's stat selection for future state update */}
-        <DropdownButton size="sm" placeholder={props.name} title={selectedPotentialLine} variant="info">
+      {/* Save the user's stat selection for future state update */}
+      <InputGroup className="sm-3">
+        <DropdownButton as={InputGroup.Prepend} size="sm" placeholder={props.name} title={selectedPotentialLine} variant="dark">
           <Dropdown.Item onClick={() => onChangeSelection('STR %', 'potentialStrPercent')}>STR %</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('DEX %', 'potentialDexPercent')}>DEX %</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('INT %', 'potentialIntPercent')}>INT %</Dropdown.Item>
@@ -70,12 +70,10 @@ const PotentialLine = (props) => {
           <Dropdown.Item onClick={() => onChangeSelection('INT +2 per 10 Character Levels', 'potential2IntPerTenLevel')}>INT +2 per 10 Character Levels</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('LUK +2 per 10 Character Levels', 'potential2LukPerTenLevel')}>LUK +2 per 10 Character Levels</Dropdown.Item>
         </DropdownButton>
-      </Col>
-      <Col>
         {/* Update the earlier chosen state variable with what the user typed in (e.target.value) */}
         {/* Only loads if user actually selects a potential line */}
-        { selectedPotentialLine && <Form.Control size="sm" type="text" value={props.potentialLine[selectedPotentialLine]} onChange={e => onChangeState(e.target.value)}/> }
-      </Col>
+        { selectedPotentialLine && <Form.Control type="text" value={props.potentialLine[selectedPotentialLine]} onChange={e => onChangeState(e.target.value)}/> }
+      </InputGroup>
     </React.Fragment>
   );
 };
