@@ -128,7 +128,7 @@ const Search = (props) => {
         <Row>
           <Col>
             {/* Search Results (list of items) */}
-            <ul> 
+            <ul>
               {items}
             </ul>
           </Col>

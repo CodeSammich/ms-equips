@@ -1,3 +1,16 @@
+.transparent {
+   background: rgba(0,0,0,1);
+}
+
+.small-font {
+  font-size: 2vh;
+}
+
+ul {
+  list-style-position: inside;
+  padding-left: 0;
+}
+
 .App {
   text-align: center;
 }
@@ -11,14 +24,6 @@
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
-}
-
-.transparent {
-   background: rgba(0,0,0,1);
-}
-
-.small-font {
-  font-size: 2vh;
 }
 
 .App-body {
@@ -54,7 +59,8 @@
 }
 
 .body-search {
-  align-items: center;
+  align-items: left;
+  justify-content: left;
   padding: 1vh;
 }
 
@@ -63,7 +69,8 @@
   padding: 1vh;
   flex-direction: column;
   flex-wrap: nowrap;
-  align-items: center;
+  align-items: left;
+  justify-content: left;
   list-style-type: none;
 }
 
