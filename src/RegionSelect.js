@@ -13,7 +13,7 @@ const RegionSelect = (props) => {
   
   return (
     <div className="body-navbar">
-      <Navbar scrolling dark expand="md" fixed="top">
+      <Navbar expand="md" fixed="top">
         <Navbar.Brand> MapleStory Equip Simulator</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
@@ -22,8 +22,7 @@ const RegionSelect = (props) => {
               <NavDropdown.Item eventKey="GMS">GMS</NavDropdown.Item>
               <NavDropdown.Item eventKey="KMS">KMS</NavDropdown.Item>
               <NavDropdown.Item eventKey="MSEA">MSEA</NavDropdown.Item>
-              <NavDropdown.Item eventKey="TMS">TMS (Taiwan)</NavDropdown.Item>
-              <NavDropdown.Item eventKey="CMS">CMS</NavDropdown.Item>
+              {/* TODO: Support TMS / CMS (Chinese encoding for scrolls is annoying) */}
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>

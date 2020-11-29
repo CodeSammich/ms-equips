@@ -1,4 +1,4 @@
-import {Col, Dropdown, DropdownButton, Form, InputGroup} from 'react-bootstrap'
+import {Dropdown, DropdownButton, Form, InputGroup} from 'react-bootstrap'
 import React, {useState} from 'react'
 
 const PotentialLine = (props) => {
@@ -69,6 +69,8 @@ const PotentialLine = (props) => {
           <Dropdown.Item onClick={() => onChangeSelection('DEX +2 per 10 Character Levels', 'potential2DexPerTenLevel')}>DEX +2 per 10 Character Levels</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('INT +2 per 10 Character Levels', 'potential2IntPerTenLevel')}>INT +2 per 10 Character Levels</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('LUK +2 per 10 Character Levels', 'potential2LukPerTenLevel')}>LUK +2 per 10 Character Levels</Dropdown.Item>
+          <Dropdown.Item onClick={() => onChangeSelection('ATT +1 per 10 Character Levels', 'potential1AttPerTenLevel')}>ATT +1 per 10 Character Levels</Dropdown.Item>
+          <Dropdown.Item onClick={() => onChangeSelection('MATT +1 per 10 Character Levels', 'potential1MattPerTenLevel')}>MATT +1 per 10 Character Levels</Dropdown.Item>
         </DropdownButton>
         {/* Update the earlier chosen state variable with what the user typed in (e.target.value) */}
         {/* Only loads if user actually selects a potential line */}

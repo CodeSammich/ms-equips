@@ -1,16 +1,10 @@
-import {Button, Col, Dropdown, DropdownButton, Form, FormControl, FormGroup, FormLabel, FormText, InputGroup, Text} from 'react-bootstrap'
+import {Button, Col, Form, FormGroup, FormLabel} from 'react-bootstrap'
 import {REGION, VERSION} from './Search'
 import React, { useEffect, useState } from 'react'
 
 import PotentialLine from './PotentialLine'
-
-const queryItemStats = (region, version, itemID) => {
-  // Queries maplestory.io API for detailed item information
-  // including the stats listed below, icons, etc.
-  let url = `https://maplestory.io/api/${region}/${version}/item/${itemID}`;
-  encodeURI(url);
-  return fetch(url);
-}
+import ScrollsMenu from './ScrollsMenu'
+import {getItemStats} from './apis'
 
 const ItemTooltip = (props) => {
   // Design note:
@@ -52,10 +46,18 @@ const ItemTooltip = (props) => {
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
 
+  // Job Information Possibilities
+  // Array of required jobs:
+  //    ["Beginner"] => Common equipment
+  //    ["Bowman"] => Regular Job specific equipment
+  //    ["Thief", "Pirate"] => Xenon-specific
+  const [job, setJob] = useState(props.itemJob);               
+
   // User Interface Specific Variables
   // TODO: Make sure to include state(s) user friendly selection options for various scrolls
   // TODO: Make sure to compute star force stats and update the SF readonly fields appropriately
   const [starForce, setStarForce] = useState(0);
+  const [currentScroll, setCurrentScroll] = useState(null);
 
   // Non-potential Stats
   // Strength
@@ -122,9 +124,8 @@ const ItemTooltip = (props) => {
   const [flameIEDPercent, setFlameIEDPercent] = useState(0);
 
   // Initial state to store Potentials. This also applies equally to Bonus Potentials
-  // Primarily for use in child component PotentialLine, because there are very many menu items that need to be selected
-  // So the state inside the child component is handling all permutations of potential settings
-  // while rendering as few Dropdown/Control components as possible.
+  // Primarily using state over hooks because in child component PotentialLine, because there are very many menu items that can be selected
+  // So the state inside the child component is handling all permutations of potential settings and updating only partial states.
   //
   // tldr; Separating into separate component because there will only ever be 6 potentials that use only a subset of these fields.
   let initialPotentialState = {
@@ -166,10 +167,11 @@ const ItemTooltip = (props) => {
     potential2StrPerTenLevel: 0,
     potential2DexPerTenLevel: 0,
     potential2IntPerTenLevel: 0,
-    potential2LukPerTenLevel: 0
+    potential2LukPerTenLevel: 0,
+    potential1AttPerTenLevel: 0,
+    potential1MattPerTenLevel: 0
   };
 
-  // Helper Functions / Variables
   // Potential / Bonus Potential states
   //
   // Should hold all the possible potential stat in 1 state which PotentialLine
@@ -185,6 +187,7 @@ const ItemTooltip = (props) => {
   // TODO: how to categorize this? May have to invent a separate category for this...
   const [soulStats, setSoulStats] = useState(0);
 
+  // Helper Functions
   // Toggle to force useEffect() to re-run and reset all the states
   const [isReset, setIsReset] = useState(false);
   const resetAllStates = () => {
@@ -200,8 +203,9 @@ const ItemTooltip = (props) => {
     setSubcategory('');
 
     // User Interface Specific Variables
-    // TODO: Make sure to include state(s) user friendly selection options for various scrolls
+    // TODO: Make sure to include state(s) user friendly selection options for various scrolls and copy here
     setStarForce(0);
+    setCurrentScroll(null);
 
     // Non-potential Stats
     // Strength
@@ -294,6 +298,33 @@ const ItemTooltip = (props) => {
     }
   }
 
+  const updateScrollStats = (scrollState) => {
+    // For number of slots available, update the stats gained on item from successful applications
+    // of the user's chosen scroll (scrollState)
+  }
+
+  const updateStarForceStats = () => {
+    // Update Star Force stats based on how many stars the user inputs in the hook
+    // For different kinds of Star Force, you can filter by job first to determine what stats to add.
+    // 
+    // e.g. "Thief" => DEX, LUK
+    // e.g. "Thief" + "Pirate" => STR, DEX, LUK
+    // e.g. "Beginner" => STR, DEX, INT, LUK
+    //
+    // For weapons, there is an extra ATT/MATT component. You can filter by "category" and "job".
+    //
+    // e.g. Thief weapon => "One-handed-weapon" + "Thief" 
+    // e.g. Xenon weapon => "One-handed-weapon" + "Thief" + "Pirate"
+    //
+    // Special Case: 
+    //       Adeles do not have properly tagged weapons (i.e. "category" => unknown)
+    //       Therefore, for Adele weapons, "category" = "Unknown" 
+    //                                    "name" => remove all with "Emblem"
+    //       Emblems are the only other equips with "Warrior" and "Unknown" as a category.
+    //
+    //       This is an EXTREMELY INFURIATING inconsistency on Nexon's part, because the data is not properly labeled. 
+  }
+
   useEffect(() => {
     // Reset all the states since a new item was loaded
     resetAllStates();
@@ -301,8 +332,8 @@ const ItemTooltip = (props) => {
     // Update Hammer information
     changeHammerDependingOnRegion();
 
-    // Load the basic item information from API and set the new state information
-    queryItemStats(props.region, props.version, props.itemID)
+    // Load the basic item information from API/local JSON and set the new state information
+    getItemStats(props.region, props.version, props.itemID)
       .then(response => response.json())
       .then(item => {
         // Update General Information
@@ -354,6 +385,10 @@ const ItemTooltip = (props) => {
           {/* Required Level / Attack Speed / Unique Equip / Item Category */}
           <Form.Row>
             <Col>
+              <FormLabel> Job </FormLabel>
+              <Form.Control readOnly size="sm" type="text" value={job}/>
+            </Col>
+            <Col>
               <FormLabel> Level </FormLabel>
               <Form.Control readOnly size="sm" type="text" value={requiredLevel}/>
             </Col>
@@ -382,10 +417,18 @@ const ItemTooltip = (props) => {
               <Form.Control size="sm" type="text" value={starForce} onChange={e => setStarForce(e.target.value)}/>
             </Col>
             <Col>
-              <FormLabel> Scrolls Applied </FormLabel>
+              <FormLabel> Scroll Slots </FormLabel>
+              <Form.Control size="sm" type="text" value={slots} onChange={e => setSlots(e.target.value)}/>
+            </Col>
+            <Col>
+              <FormLabel> Scroll Type </FormLabel>
               <Form.Control size="sm" type="text" value={slots} onChange={e => setSlots(e.target.value)}/>
             </Col>
             {/* TODO: Include different kinds of scrolls options here */}
+            <ScrollsMenu 
+              name='Scroll Type'
+              
+            />
           </Form.Row>
 
           {/* Stats Window => Base | Flame | Star Force | Scrolling */}

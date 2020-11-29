@@ -1,7 +1,3 @@
-.transparent {
-   background: rgba(0,0,0,1);
-}
-
 .small-font {
   font-size: 2vh;
 }
@@ -44,6 +40,7 @@ ul {
 
 .body-navbar {
   padding-bottom: 10vh;
+  background: rgba(0,0,0,1);
 }
 
 .body-icons {
