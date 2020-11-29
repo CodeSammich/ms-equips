@@ -6,10 +6,12 @@ For example, one conceptual idea is to use a similar GUI to this [cube simulator
 
 The main advantage of this tool is its relatively unintimidating UI. In addition, it may also have the ability to extend functionality to more advanced features, like damage calculation, skill rotations, image-based equipment input, projected damage against various mobs, etc.
 
-Overall goal: reduce player knowledge needed to calculate damage + automate as much as possible + simplify UI into step-by-step
-
 # Why use this instead of spreadsheet and other tools?
 
+**Overall goal: Reduce required player knowledge needed to calculate damage**
+
+- Automate equip/skill information as much as possible
+- Simplify UX by breaking down steps needed to calculate damage into bite-sized pieces
 - Potential for advanced functionality (screenshot inputs)
 - Dynamic skill rotation calculations for damage, etc.
 - Projected damage against actual mobs
@@ -45,7 +47,7 @@ Overall goal: reduce player knowledge needed to calculate damage + automate as m
 
 - [ ] Make sure all form inputs are properly cleaned and standard defensive techniques are used for all Forms / Buttons
 
-# Optional Augmentations
+## Optional Augmentations
 
 - [ ] Augment searchbar with an inventory UI
 - [ ] Generate several pages of items, instead of just 5 items on one page
@@ -53,7 +55,7 @@ Overall goal: reduce player knowledge needed to calculate damage + automate as m
 - [ ] Make sure that the components render properly and are spaced properly on various resolutions (especially half-screen / mobile)
 - [ ] Improve search functionality by including more domain knowledge (e.g. common terms, category search, etc.)
 
-# Advanced Functionality
+## Advanced Functionality
 
 - [ ] Support for [Familiars](https://github.com/PirateIzzy/WzComparerR2), Links, Legion/Union, etc.
 - [ ] Average DPM / projected Dojo floor? Basically "mechanically dependent" tool. Maybe ask user to input a sequence of skills and compare various skill rotations to optimize DPM
