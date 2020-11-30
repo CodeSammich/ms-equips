@@ -15,13 +15,16 @@ const ScrollsMenu = (props) => {
     // Logic handling for what kinds of scrolls are displayed for the user to pick. Hides irrelevant scrolls
     // We use a local array instead of the types hook because we need to set and call the list in the same useEffect(), which are async
 
-    // Every equip has access to these three basic Spell Traces
+    // Scrolls without Item Restrictions
     let scrolls = [
       '30% Spell Trace',
       '70% Spell Trace',
-      '100% Spell Trace'
+      '100% Spell Trace',
+      '9th Anniversary Prime Scroll'
+      // NOTE: If you add an scroll to Special Scrolls in scrolls.json, please add scroll name here.
     ];
 
+    // Scrolls with Item Restrictions
     // Weapons have 15% Spell Trace
     if (props.category.includes('Weapon') ||
         (props.category == 'Unknown' && props.job == 'Warrior' && !props.itemName.includes('Emblem'))) {    // Adele Weapon lol
@@ -39,9 +42,6 @@ const ScrollsMenu = (props) => {
         scrolls = [...scrolls, 'Advanced Gollux Scroll'];
       }
     }
-
-    // 9th Anniversary Scrolls
-    scrolls = [...scrolls, '9th Anniversary Prime Scroll']
 
     // Dominator Pendant Scrolls
     if (props.itemName == 'Dominator Pendant') {
@@ -89,8 +89,13 @@ const ScrollsMenu = (props) => {
         </DropdownButton>
 
         {/* Select Scroll Stat. Only displayed if user selects a Spell Trace scroll. */}
+        {/* Should not be available for items without a stat in the Spell Trace scroll */}
         {
           scrollType.includes('Spell Trace')
+          &&
+          props.subcategory != 'Glove'
+          &&
+          props.subcategory != 'Mechanical Heart'
           &&
           <DropdownButton as={InputGroup.Prepend} title={scrollStat} variant="dark">
             {['STR',

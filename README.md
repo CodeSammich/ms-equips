@@ -66,3 +66,11 @@ The main advantage of this tool is its relatively unintimidating UI. In addition
 - [ ] What bosses can you currently do? How much time can you spend not attacking?
 - [ ] What is the next equip upgrade you can feasibly make? (given user's dedication to game)
 - [ ] Estimated price to achieve a certain item?
+
+# Want to Contribute?
+
+All contributions are welcome! Please follow the general guidelines below before submitting a Pull Request as to not break any code.
+
+### Adding Additional Scrolls
+
+If you would like to update the `scrolls.json` file with more scrolls, please add all of them under `Special Scrolls` and follow the existing format. Once you have done so, please also update the appropriate list in `ScrollsMenu.js`.

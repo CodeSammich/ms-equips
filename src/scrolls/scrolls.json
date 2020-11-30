@@ -1,0 +1,356 @@
+{
+  "Spell Trace": {
+    "Glove": {
+      "30% Spell Trace": {
+        "<75": {
+          "attMultiplier": 2,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 3,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        }
+      },
+      "70% Spell Trace": {
+        "<75": {
+          "attMultiplier": 1,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 2,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        }
+      },
+      "100% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 1,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        }
+      }
+    },
+    "Armor": {
+      "30% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 3,
+          "hpMultiplier": 30,
+          "DAHPMultiplier": 150
+        },
+        "<115": {
+          "attMultiplier": 0,
+          "statMultiplier": 5,
+          "hpMultiplier": 70,
+          "DAHPMultiplier": 250
+        },
+        "<275": {
+          "attMultiplier": 0,
+          "statMultiplier": 7,
+          "hpMultiplier": 120,
+          "DAHPMultiplier": 350
+        }
+      },
+      "70% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 2,
+          "hpMultiplier": 15,
+          "DAHPMultiplier": 100
+        },
+        "<115": {
+          "attMultiplier": 0,
+          "statMultiplier": 3,
+          "hpMultiplier": 40,
+          "DAHPMultiplier": 150
+        },
+        "<275": {
+          "attMultiplier": 0,
+          "statMultiplier": 4,
+          "hpMultiplier": 70,
+          "DAHPMultiplier": 200
+        }
+      },
+      "100% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 1,
+          "hpMultiplier": 5,
+          "DAHPMultiplier": 50
+        },
+        "<115": {
+          "attMultiplier": 0,
+          "statMultiplier": 2,
+          "hpMultiplier": 20,
+          "DAHPMultiplier": 100
+        },
+        "<275": {
+          "attMultiplier": 0,
+          "statMultiplier": 3,
+          "hpMultiplier": 30,
+          "DAHPMultiplier": 150
+        }
+      }
+    },
+    "Accessory": {
+      "30% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 3,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 150 
+        },
+        "<115": {
+          "attMultiplier": 0,
+          "statMultiplier": 4,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 200
+        },
+        "<275": {
+          "attMultiplier": 0,
+          "statMultiplier": 5,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 250
+        }
+      },
+      "70% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 2,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 100
+        },
+        "<115": {
+          "attMultiplier": 0,
+          "statMultiplier": 2,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 100
+        },
+        "<275": {
+          "attMultiplier": 0,
+          "statMultiplier": 3,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 150
+        }
+      },
+      "100% Spell Trace": {
+        "<75": {
+          "attMultiplier": 0,
+          "statMultiplier": 1,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 50
+        },
+        "<115": {
+          "attMultiplier": 0,
+          "statMultiplier": 1,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 50
+        },
+        "<275": {
+          "attMultiplier": 0,
+          "statMultiplier": 2,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 100
+        }
+      }
+    },
+    "Mechanical Heart": {
+      "30% Spell Trace": {
+        "<75": {
+          "attMultiplier": 3,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 5,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 7,
+          "statMultiplier": 5,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        }
+      },
+      "70% Spell Trace": {
+        "<75": {
+          "attMultiplier": 2,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 3,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 5,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        }
+      },
+      "100% Spell Trace": {
+        "<75": {
+          "attMultiplier": 1,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 2,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 3,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        }
+      }
+    },
+    "Weapon": {
+      "15% Spell Trace": {
+        "<75": {
+          "attMultiplier": 5,
+          "statMultiplier": 2,
+          "hpMultiplier": 100,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 7,
+          "statMultiplier": 3,
+          "hpMultiplier": 150,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 9,
+          "statMultiplier": 4,
+          "hpMultiplier": 200,
+          "DAHPMultiplier": 0
+        }
+      },
+      "30% Spell Trace": {
+        "<75": {
+          "attMultiplier": 3,
+          "statMultiplier": 1,
+          "hpMultiplier": 50,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 5,
+          "statMultiplier": 2,
+          "hpMultiplier": 100,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 7,
+          "statMultiplier": 3,
+          "hpMultiplier": 150,
+          "DAHPMultiplier": 0
+        }
+      },
+      "70% Spell Trace": {
+        "<75": {
+          "attMultiplier": 2,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 3,
+          "statMultiplier": 1,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 5,
+          "statMultiplier": 2,
+          "hpMultiplier": 100,
+          "DAHPMultiplier": 0
+        }
+      },
+      "100% Spell Trace": {
+        "<75": {
+          "attMultiplier": 1,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<115": {
+          "attMultiplier": 2,
+          "statMultiplier": 0,
+          "hpMultiplier": 0,
+          "DAHPMultiplier": 0
+        },
+        "<275": {
+          "attMultiplier": 3,
+          "statMultiplier": 1,
+          "hpMultiplier": 50,
+          "DAHPMultiplier": 0
+        }
+      }
+    }
+  },
+  "Special Scroll": {
+    "Basic Gollux Scroll": {
+      "Accessory": {
+        "statMultiplier": 1,
+        "attMultiplier": 2,
+        "hpMultiplier": 0
+      }
+    },
+    "Advanced Gollux Scroll": {
+      "Accessory": {
+        "statMultiplier": 3,
+        "attMultiplier": 4,
+        "hpMultiplier": 0
+      }
+    },
+    "9th Anniversary Prime Scroll": {
+      "Accessory": {
+        "statMultiplier": 10,
+        "attMultiplier": 0,
+        "hpMultiplier": 0
+      },
+      "Armor": {
+        "statMultiplier": 10,
+        "attMultiplier": 0,
+        "hpMultiplier": 0
+      },
+      "Weapon": {
+        "statMultiplier": 3,
+        "attMultiplier": 10,
+        "hpMultiplier": 0
+      }
+    },
+    "Fragment of Distorted Time": {
+      "Accessory": {
+        "statMultiplier": 3,
+        "attMultiplier": 3,
+        "hpMultiplier": 40
+      }
+    }
+  }
+}

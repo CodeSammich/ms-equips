@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import PotentialLine from './PotentialLine'
 import ScrollsMenu from './ScrollsMenu'
 import {getItemStats} from './apis'
+import scrolls from './scrolls/scrolls.json'
 
 const ItemTooltip = (props) => {
   // Design note:
@@ -308,359 +309,106 @@ const ItemTooltip = (props) => {
     //
     // Update the stats using the selected scroll on all slots. Please see ScrollsMenu for fields and supported scrolls.
 
-    setScrollStr(0);
-    setScrollDex(0);
-    setScrollInt(0);
-    setScrollLuk(0);
-    setScrollAtt(0);
-    setScrollMatt(0);
-    setScrollHP(0);
-    setScrollMP(0);
+    // Converting Hooks to local variables to make JSON simpler
+    let level = '';               // conversion from requiredLevel
+    let categoryKey = category;   // combine category + subcategory
+
+    // Convert relevant state hooks into JSON keys
+    if (requiredLevel < 75) {
+      level = '<75';
+    }
+    else if (requiredLevel < 115) {
+      level = '<115';
+    }
+    else {
+      level = '<275';
+    }
+
+    // Allow "Glove" and "Mechanical Heart" subcategories to be on the same level as categories like "Armor"
+    if (subcategory == 'Glove' || subcategory == 'Mechanical Heart') {
+      categoryKey = subcategory;
+    }
+
+    // Combine all weapon category names into "Weapon"
+    // Please see explanation on why Adele weapon is so strangely categorized
+    if (category.includes('Weapon') ||
+        (category == 'Unknown' && job == 'Warrior' && !props.name.includes('Emblem'))) { // Adele
+          categoryKey = 'Weapon';
+    }
 
     // How much each scroll adds depending on item level / scroll type
+    // These are the inner-most JSON keys we're trying to obtain
     let statMultiplier = 0;
     let attMultiplier = 0;
     let hpMultiplier = 0; 
+    let DAHPMultiplier = 0;
 
-    // TODO: Extract the massive if statement into a JSON 
-    // Spell Trace Logic
+    // Update all stats. Make sure to overwrite all stats shown to avoid lingering states.
     if (scrollType.includes('Spell Trace')) {
-      if (category == 'Armor') {
-        if (subcategory == 'Glove') {
-          // Glove scrolls only adjust ATT/MATT
-          if (scrollType == '30% Spell Trace') {
-            if (requiredLevel < 75) {
-              attMultiplier = 2;
-            } else {
-              attMultiplier = 3;
-            }
-          } 
-          else if (scrollType == '70% Spell Trace') {
-            if (requiredLevel < 75) {
-              attMultiplier = 1;
-            } else {
-              attMultiplier = 2;
-            }
-          } 
-          else if (scrollType == '100% Spell Trace') {
-            if (requiredLevel < 75) {
-              attMultiplier = 0;
-            } else {
-              attMultiplier = 1;
-            }
-          } 
-          
-          setScrollAtt(attMultiplier * slots);
-          setScrollMatt(attMultiplier * slots);
-        } else {
-          // Regular armor stats have Stat and HP, and extra HP for DA
-          if (scrollType == '30% Spell Trace') {
-            if (requiredLevel < 75) {
-              statMultiplier = 3;
-              hpMultiplier = 30;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 150;
-              }
-            } else if (requiredLevel < 115) {
-              statMultiplier = 5;
-              hpMultiplier = 70;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 250;
-              }
-            } else {
-              statMultiplier = 7;
-              hpMultiplier = 120;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 350;
-              }
-            }
-          } 
-          else if (scrollType == '70% Spell Trace') {
-            if (requiredLevel < 75) {
-              statMultiplier = 2;
-              hpMultiplier = 15;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 100;
-              }
-            } else if (requiredLevel < 115) {
-              statMultiplier = 3;
-              hpMultiplier = 40;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 150;
-              }
-            } else {
-              statMultiplier = 4;
-              hpMultiplier = 70;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 200;
-              }
-            }
-          }
-          else if (scrollType == '100% Spell Trace') {
-            if (requiredLevel < 75) {
-              statMultiplier = 1;
-              hpMultiplier = 5;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 50;
-              }
-            } else if (requiredLevel < 115) {
-              statMultiplier = 2;
-              hpMultiplier = 20;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 100;
-              }
-            } else {
-              statMultiplier = 3;
-              hpMultiplier = 30;
-              if (primaryStat == 'HP') {
-                hpMultiplier += 150;
-              }
-            }
-          } 
+      // ES6 Object Destructuring
+      ({attMultiplier, statMultiplier, hpMultiplier, DAHPMultiplier} 
+        = scrolls['Spell Trace'][categoryKey][scrollType][level]);
 
-          // Update appropriate stats
-          if (primaryStat == 'STR') {
-            setScrollStr(slots * statMultiplier);
-            setScrollHP(slots * hpMultiplier);
-          }
-          else if (primaryStat == 'DEX') {
-            setScrollDex(slots * statMultiplier);
-            setScrollHP(slots * hpMultiplier);
-          }
-          else if (primaryStat == 'INT') {
-            setScrollInt(slots * statMultiplier);
-            setScrollHP(slots * hpMultiplier);
-          }
-          else if (primaryStat == 'LUK') {
-            setScrollLuk(slots * statMultiplier);
-            setScrollHP(slots * hpMultiplier);
-          }
-          else if (primaryStat == 'HP') {
-            setScrollHP(slots * hpMultiplier);
-          }
-
-          if (slots >= 4) {
-            // "On the 4th success, if you used Spell Traces, you will receive +1 ATT/MATT"
-            setScrollAtt(1);
-            setScrollMatt(1);
-          }
-        }
+      // primaryStat only applies to Spell Traces
+      if (primaryStat == 'STR') {
+        setScrollStr(slots * statMultiplier);
+        setScrollDex(0);
+        setScrollInt(0);
+        setScrollLuk(0);
+        setScrollHP(slots * hpMultiplier);
+      }
+      else if (primaryStat == 'DEX') {
+        setScrollStr(0);
+        setScrollDex(slots * statMultiplier);
+        setScrollInt(0);
+        setScrollLuk(0);
+        setScrollHP(slots * hpMultiplier);
+      }
+      else if (primaryStat == 'INT') {
+        setScrollStr(0);
+        setScrollDex(0);
+        setScrollInt(slots * statMultiplier);
+        setScrollLuk(0);
+        setScrollHP(slots * hpMultiplier);
+      }
+      else if (primaryStat == 'LUK') {
+        setScrollStr(0);
+        setScrollDex(0);
+        setScrollInt(0);
+        setScrollLuk(slots * statMultiplier);
+        setScrollHP(slots * hpMultiplier);
+      }
+      else if (primaryStat == 'HP') {  // Demon Avengers
+        setScrollStr(0);
+        setScrollDex(0);
+        setScrollInt(0);
+        setScrollLuk(0);
+        setScrollHP(slots * (hpMultiplier + DAHPMultiplier));
       } 
-      else if (category == 'Accessory') {
-        if (scrollType == '30% Spell Trace') {
-          if (requiredLevel < 75) {
-            statMultiplier = 3;
-            hpMultiplier = 150;
-          }
-          else if (requiredLevel < 115) {
-            statMultiplier = 4;
-            hpMultiplier = 200;
-          }
-          else {
-            statMultiplier = 5;
-            hpMultiplier = 250;
-          }
-        } 
-        else if (scrollType == '70% Spell Trace') {
-          if (requiredLevel < 115) {
-            statMultiplier = 2;
-            hpMultiplier = 100;
-          }
-          else {
-            statMultiplier = 3;
-            hpMultiplier = 150;
-          }
-        } 
-        else if (scrollType == '100% Spell Trace') {
-          if (requiredLevel < 115) {
-            statMultiplier = 1;
-            hpMultiplier = 50;
-          }
-          else {
-            statMultiplier = 2;
-            hpMultiplier = 100;
-          }
-        } 
 
-        // Update appropriate stats for Spell Traces
-        if (primaryStat == 'STR') {
-          setScrollStr(slots * statMultiplier);
-        }
-        else if (primaryStat == 'DEX') {
-          setScrollDex(slots * statMultiplier);
-        }
-        else if (primaryStat == 'INT') {
-          setScrollInt(slots * statMultiplier);
-        }
-        else if (primaryStat == 'LUK') {
-          setScrollLuk(slots * statMultiplier);
-        }
-        else if (primaryStat == 'HP') {
-          setScrollHP(slots * hpMultiplier);
-        }
-      }
-      else if (category == 'Other') {
-        if (subcategory == 'Mechanical Heart') {
-          if (scrollType == '30% Spell Trace') {
-            if (requiredLevel < 75) {
-              attMultiplier = 3
-            }
-            else if (requiredLevel < 115) {
-              attMultiplier = 5
-            }
-            else {
-              attMultiplier = 7
-            }
-          } 
-          else if (scrollType == '70% Spell Trace') {
-            if (requiredLevel < 75) {
-              attMultiplier = 2
-            }
-            else if (requiredLevel < 115) {
-              attMultiplier = 3
-            }
-            else {
-              attMultiplier = 5
-            }
-          } 
-          else if (scrollType == '100% Spell Trace') {
-            if (requiredLevel < 75) {
-              attMultiplier = 1
-            }
-            else if (requiredLevel < 115) {
-              attMultiplier = 2
-            }
-            else {
-              attMultiplier = 3
-            }
-          } 
-
-          // Update appropriate stats
-          setScrollAtt(slots * attMultiplier);
-          setScrollMatt(slots * attMultiplier);
-        }
-      }
-      else if (category == 'One-Handed Weapon' || category == 'Two-Handed Weapon' || category == 'Unknown') {
-        // For notes on Unknown, please see calculateStarForceStats() comments about Adele weapons
-        if (scrollType == '15% Spell Trace') {
-          if (requiredLevel < 75) {
-            attMultiplier = 5;
-            statMultiplier = 2;
-            hpMultiplier = 100;
-          }
-          else if (requiredLevel < 115) {
-            attMultiplier = 7;
-            statMultiplier = 3;
-            hpMultiplier = 150;
-          }
-          else {
-            attMultiplier = 9;
-            statMultiplier = 4;
-            hpMultiplier = 200;
-          }
-        }
-        else if (scrollType == '30% Spell Trace') {
-          if (requiredLevel < 75) {
-            attMultiplier = 3;
-            statMultiplier = 1;
-            hpMultiplier = 50;
-          }
-          else if (requiredLevel < 115) {
-            attMultiplier = 5;
-            statMultiplier = 2;
-            hpMultiplier = 100;
-          }
-          else {
-            attMultiplier = 7;
-            statMultiplier = 3;
-            hpMultiplier = 150;
-          }
-        } 
-        else if (scrollType == '70% Spell Trace') {
-          if (requiredLevel < 75) {
-            attMultiplier = 2;
-          }
-          else if (requiredLevel < 115) {
-            attMultiplier = 3;
-            statMultiplier = 1;
-            hpMultiplier = 50;
-          }
-          else {
-            attMultiplier = 5;
-            statMultiplier = 2;
-            hpMultiplier = 100;
-          }
-        } 
-        else if (scrollType == '100% Spell Trace') {
-          if (requiredLevel < 75) {
-            attMultiplier = 1;
-          }
-          else if (requiredLevel < 115) {
-            attMultiplier = 2;
-          }
-          else {
-            attMultiplier = 3;
-            statMultiplier = 1;
-            hpMultiplier = 50;
-          }
-        } 
-
-        // Update appropriate stats
+      if (slots >= 4 && categoryKey == 'Armor') {
+        // "On the 4th success, if you used Spell Traces on Armor, you will receive +1 ATT/MATT"
+        setScrollAtt(slots * attMultiplier + 1);
+        setScrollMatt(slots * attMultiplier + 1);
+      } 
+      else {
         setScrollAtt(slots * attMultiplier);
         setScrollMatt(slots * attMultiplier);
+      }
+    } 
+    else if (Object.keys(scrolls['Special Scroll']).includes(scrollType)) {
+      // ES6 Object Destructuring
+      ({attMultiplier, statMultiplier, hpMultiplier, DAHPMultiplier} 
+        = scrolls['Special Scroll'][scrollType][categoryKey]);
 
-        if (primaryStat == 'STR') {
-          setScrollStr(slots * statMultiplier);
-        }
-        else if (primaryStat == 'DEX') {
-          setScrollDex(slots * statMultiplier);
-        }
-        else if (primaryStat == 'INT') {
-          setScrollInt(slots * statMultiplier);
-        }
-        else if (primaryStat == 'LUK') {
-          setScrollLuk(slots * statMultiplier);
-        }
-        else if (primaryStat == 'HP') {
-          setScrollHP(slots * hpMultiplier);
-        }
-      }
-    }
-    else {
-      // Special Scrolls (non-Spell Trace)
-      if (scrollType == 'Basic Gollux Scroll') {
-        statMultiplier = 1;
-        attMultiplier = 2;
-      } 
-      else if (scrollType == 'Advanced Gollux Scroll') {
-        statMultiplier = 3;
-        attMultiplier = 4;
-      }
-      else if (scrollType == '9th Anniversary Prime Scroll') {
-        if (category.includes('Weapon') 
-            || 
-           (category == 'Unknown' && job == 'Warrior' && !name.includes('Emblem'))) {    // Adele Weapon lol
-            statMultiplier = 3;
-            attMultiplier = 10;
-        }
-        else if (category == 'Accessory' || category == 'Armor') {
-          statMultiplier = 10;
-        }
-      }
-      else if (scrollType == 'Fragment of Distorted Time') {
-        statMultiplier = 3;
-        attMultiplier = 3;
-        hpMultiplier = 40;
-      }
-
-      // Update stats for Special Scrolls
+      // Special Scrolls always have all stats, instead of one specific stat.
       setScrollStr(slots * statMultiplier);
       setScrollDex(slots * statMultiplier);
       setScrollInt(slots * statMultiplier);
       setScrollLuk(slots * statMultiplier);
+      setScrollHP(slots * hpMultiplier);
       setScrollAtt(slots * attMultiplier);
       setScrollMatt(slots * attMultiplier);
-      setScrollHP(slots * hpMultiplier);
     }
   }
 
@@ -801,6 +549,7 @@ const ItemTooltip = (props) => {
                 id={props.itemID}
                 itemName={name}
                 category={category}
+                subcategory={subcategory}
                 job={job}
               />
             </Col>
