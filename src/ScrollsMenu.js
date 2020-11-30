@@ -4,16 +4,62 @@ import React, {useEffect, useState} from 'react'
 const ScrollsMenu = (props) => {
   // Menu for user to select from list of common scrolls that provide consistent stats (e.g. no Chaos Scrolls).
   //
-  // Currently supports: Spell Traces
-  //
-  // TODO: Add support for Gollux Scrolls, 9th Anniversary Prime Scrolls
-  //       Remember to update logic in calculateScrollStats() in ItemTooltip
-  //
-  // TODO: Remove options that are not relevant to item. (e.g. 15% Spell Trace for non-weapons, Gollux for non-gollux)
+  // Currently supports: Spell Traces, Gollux, Primes, Ark Scrolls
   //
   // TODO: Look into having picture support inside Dropdown Menu for each kind of scroll?
-  const [scrollType, setScrollType] = useState(props.type);
-  const [scrollStat, setScrollStat] = useState(props.stat);
+  const [scrollType, setScrollType] = useState(props.type);    // User Selected Scroll
+  const [scrollStat, setScrollStat] = useState(props.stat);    // User Selected Stat for Spell Trace Scrolls
+  const [typesMenu, setTypesMenu] = useState(null);            // JSX of Menu for scroll types
+
+  useEffect(() => {
+    // Logic handling for what kinds of scrolls are displayed for the user to pick. Hides irrelevant scrolls
+    // We use a local array instead of the types hook because we need to set and call the list in the same useEffect(), which are async
+
+    // Every equip has access to these three basic Spell Traces
+    let scrolls = [
+      '30% Spell Trace',
+      '70% Spell Trace',
+      '100% Spell Trace'
+    ];
+
+    // Weapons have 15% Spell Trace
+    if (props.category.includes('Weapon') ||
+        (props.category == 'Unknown' && props.job == 'Warrior' && !props.itemName.includes('Emblem'))) {    // Adele Weapon lol
+          scrolls = ['15% Spell Trace', ...scrolls];
+    }
+
+    // Gollux Scrolls
+    if (props.itemName.includes('Gollux')) {
+      // Basic Gollux Scroll only applies to Cracked and Solid Gollux Accessories
+      if (props.itemName.includes('Cracked') || props.itemName.includes('Solid')) {
+        scrolls = [...scrolls, 'Basic Gollux Scroll'];
+      }
+      // Advanced Gollux Scroll only applies to Reinforced and Superior Gollux Accessories
+      if (props.itemName.includes('Reinforced') || props.itemName.includes('Superior')) {
+        scrolls = [...scrolls, 'Advanced Gollux Scroll'];
+      }
+    }
+
+    // 9th Anniversary Scrolls
+    scrolls = [...scrolls, '9th Anniversary Prime Scroll']
+
+    // Dominator Pendant Scrolls
+    if (props.itemName == 'Dominator Pendant') {
+      scrolls = [...scrolls, 'Fragment of Distorted Time'];
+    }
+
+    // Update hook and generate JSX. 
+    // Needs to be generated locally b/c if scrolls is a hook, then scrolls may not be updated before map is called.
+    setTypesMenu(
+      (
+        scrolls.map((type) => (
+          <Dropdown.Item onClick={() => onSelectType(type)}>
+            {type}
+          </Dropdown.Item> 
+        ))
+      )
+    );
+  }, [props.itemName, props.category])    
 
   const onSelectStat = (stat) => {
     // update both local and parent state hook to properly update dropdown title
@@ -37,16 +83,9 @@ const ScrollsMenu = (props) => {
     <React.Fragment>
       {/* Save the user's scroll selection for stats logic update in ItemTooltip */}
       <InputGroup size="sm">
-        {/* Select Scroll Success Rate. */}
+        {/* Select Type of Scroll (e.g. Spell Trace 15%, Gollux Scroll, etc.). */}
         <DropdownButton as={InputGroup.Prepend} title={scrollType} variant="dark">
-          {['15% Spell Trace',
-            '30% Spell Trace',
-            '70% Spell Trace',
-            '100% Spell Trace'].map((type) => (
-              <Dropdown.Item onClick={() => onSelectType(type)}>
-                {type}
-              </Dropdown.Item> 
-          ))}
+          {typesMenu}
         </DropdownButton>
 
         {/* Select Scroll Stat. Only displayed if user selects a Spell Trace scroll. */}

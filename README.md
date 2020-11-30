@@ -65,3 +65,4 @@ The main advantage of this tool is its relatively unintimidating UI. In addition
 - [ ] Projected nerfs/buffs effect on classes
 - [ ] What bosses can you currently do? How much time can you spend not attacking?
 - [ ] What is the next equip upgrade you can feasibly make? (given user's dedication to game)
+- [ ] Estimated price to achieve a certain item?
