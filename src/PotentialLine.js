@@ -1,5 +1,5 @@
 import {Dropdown, DropdownButton, Form, InputGroup} from 'react-bootstrap'
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 
 const PotentialLine = (props) => {
   // Handles the state and corresponding selection menu for one Potential/Bonus Potential line
@@ -30,11 +30,17 @@ const PotentialLine = (props) => {
     )
   };
 
+  useEffect(() => {
+    // Reset Potential Lines menu name
+    setSelectedPotentialLine(props.name);
+  }, [props.id, props.potentialLine]);         // Resets on new item load or if reset button is pressed
+
   return (
     <React.Fragment>
       {/* Save the user's stat selection for future state update */}
+      {/* NOTE: Not using inline for loop because object keys cannot have symbols (e.g. %) in name */}
       <InputGroup className="sm-3">
-        <DropdownButton as={InputGroup.Prepend} size="sm" placeholder={props.name} title={selectedPotentialLine} variant="dark">
+        <DropdownButton as={InputGroup.Prepend} id={props.name} size="sm" title={selectedPotentialLine} variant="dark">
           <Dropdown.Item onClick={() => onChangeSelection('STR %', 'potentialStrPercent')}>STR %</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('DEX %', 'potentialDexPercent')}>DEX %</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('INT %', 'potentialIntPercent')}>INT %</Dropdown.Item>
@@ -72,6 +78,7 @@ const PotentialLine = (props) => {
           <Dropdown.Item onClick={() => onChangeSelection('ATT +1 per 10 Character Levels', 'potential1AttPerTenLevel')}>ATT +1 per 10 Character Levels</Dropdown.Item>
           <Dropdown.Item onClick={() => onChangeSelection('MATT +1 per 10 Character Levels', 'potential1MattPerTenLevel')}>MATT +1 per 10 Character Levels</Dropdown.Item>
         </DropdownButton>
+
         {/* Update the earlier chosen state variable with what the user typed in (e.target.value) */}
         {/* Only loads if user actually selects a potential line */}
         { selectedPotentialLine && <Form.Control type="text" value={props.potentialLine[selectedPotentialLine]} onChange={e => onChangeState(e.target.value)}/> }

@@ -34,11 +34,11 @@ The main advantage of this tool is its relatively unintimidating UI. In addition
 - [x] Create simple header with region select
 - [ ] Create Dark Mode (switch all buttons from primary to dark and change background image)
 - [ ] Make header less transparent or simply solid color to avoid text overlap confusion
+- [ ] Update header with Twitch/Github/Youtube buttons
 - [ ] Automatically determine latest version number based on region or set it manually in the header
 - [ ] Set two tabs, one for equip configuration/search and one for overall views/total range window. One idea is [React Bootstrap Tabs](https://react-bootstrap.github.io/components/tabs/)
-- [ ] Produce a simple footer with Twitch/YT/Github links + space for more tools
 - [ ] Make form simple step-by-step (one input section at a time) to make users less scared
-- [ ] Adjust inputs/website layouts displayed based on user situation: Class, Server, Region. (i.e. hide stats that are not relevant for the user)
+- [ ] Adjust inputs/website layouts displayed based on user: Class, Server, Region. (i.e. hide stats that are irrelevant for the user)
 - [ ] Hide irrelevant information per equip (e.g. thief equips don't have int, rings can't get %damage)
 - [ ] Have a flame number input checker (to make sure flame inputted is a valid configuration for flame)
 - [ ] Gear Presets for easier UI access

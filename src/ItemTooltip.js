@@ -51,13 +51,13 @@ const ItemTooltip = (props) => {
   //    ["Beginner"] => Common equipment
   //    ["Bowman"] => Regular Job specific equipment
   //    ["Thief", "Pirate"] => Xenon-specific
-  const [job, setJob] = useState(props.itemJob);               
+  const [job, setJob] = useState(props.itemJob);               // Item required job, not user's job
 
   // User Interface Specific Variables
-  // TODO: Make sure to include state(s) user friendly selection options for various scrolls
   // TODO: Make sure to compute star force stats and update the SF readonly fields appropriately
   const [starForce, setStarForce] = useState(0);
-  const [currentScroll, setCurrentScroll] = useState(null);
+  const [scrollType, setScrollType] = useState('Type');            // See ScrollsMenu, defaults to label for menu
+  const [primaryStat, setPrimaryStat] = useState('Stat');          // For scrolling only. See ScrollsMenu, defaults to label for menu
 
   // Non-potential Stats
   // Strength
@@ -129,6 +129,11 @@ const ItemTooltip = (props) => {
   //
   // tldr; Separating into separate component because there will only ever be 6 potentials that use only a subset of these fields.
   let initialPotentialState = {
+    // Default PotentialLine component Dropdown menu names. Prevents input field from crashing with a new item.
+    "Line 1": 0,
+    "Line 2": 0,
+    "Line 3": 0,
+
     // Potential Stats
     // Percent Stats
     potentialStrPercent: 0,
@@ -202,10 +207,10 @@ const ItemTooltip = (props) => {
     setCategory('');
     setSubcategory('');
 
-    // User Interface Specific Variables
-    // TODO: Make sure to include state(s) user friendly selection options for various scrolls and copy here
+    // Star Force / Scrolling UI 
     setStarForce(0);
-    setCurrentScroll(null);
+    setScrollType('Type');              // Changing this value triggers useEffect() in ScrollsMenu
+    setPrimaryStat('Stat');              
 
     // Non-potential Stats
     // Strength
@@ -298,12 +303,332 @@ const ItemTooltip = (props) => {
     }
   }
 
-  const updateScrollStats = (scrollState) => {
-    // For number of slots available, update the stats gained on item from successful applications
-    // of the user's chosen scroll (scrollState)
+  const calculateScrollStats = () => {
+    // Scrolling mechanics info from: https://strategywiki.org/wiki/MapleStory/Spell_Trace_and_Star_Force
+    //
+    // Update the stats using the selected scroll on all slots. Please see ScrollsMenu for fields and supported scrolls.
+
+    setScrollStr(0);
+    setScrollDex(0);
+    setScrollInt(0);
+    setScrollLuk(0);
+    setScrollAtt(0);
+    setScrollMatt(0);
+    setScrollHP(0);
+    setScrollMP(0);
+
+    // How much each scroll adds depending on item level / scroll type
+    let statMultiplier = 0;
+    let attMultiplier = 0;
+    let hpMultiplier = 0; 
+
+    // Various Types of Equipment
+    if (category == 'Armor') {
+      if (subcategory == 'Glove') {
+        // Glove scrolls only adjust ATT/MATT
+        if (scrollType == '30% Spell Trace') {
+          if (requiredLevel < 75) {
+            attMultiplier = 2;
+          } else {
+            attMultiplier = 3;
+          }
+        } 
+        else if (scrollType == '70% Spell Trace') {
+          if (requiredLevel < 75) {
+            attMultiplier = 1;
+          } else {
+            attMultiplier = 2;
+          }
+        } 
+        else if (scrollType == '100% Spell Trace') {
+          if (requiredLevel < 75) {
+            attMultiplier = 0;
+          } else {
+            attMultiplier = 1;
+          }
+        } 
+        
+        setScrollAtt(attMultiplier * slots);
+        setScrollMatt(attMultiplier * slots);
+      } else {
+        // Regular armor stats have Stat and HP, and extra HP for DA
+        if (scrollType == '30% Spell Trace') {
+          if (requiredLevel < 75) {
+            statMultiplier = 3;
+            hpMultiplier = 30;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 150;
+            }
+          } else if (requiredLevel < 115) {
+            statMultiplier = 5;
+            hpMultiplier = 70;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 250;
+            }
+          } else {
+            statMultiplier = 7;
+            hpMultiplier = 120;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 350;
+            }
+          }
+        } 
+        else if (scrollType == '70% Spell Trace') {
+          if (requiredLevel < 75) {
+            statMultiplier = 2;
+            hpMultiplier = 15;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 100;
+            }
+          } else if (requiredLevel < 115) {
+            statMultiplier = 3;
+            hpMultiplier = 40;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 150;
+            }
+          } else {
+            statMultiplier = 4;
+            hpMultiplier = 70;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 200;
+            }
+          }
+        }
+        else if (scrollType == '100% Spell Trace') {
+          if (requiredLevel < 75) {
+            statMultiplier = 1;
+            hpMultiplier = 5;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 50;
+            }
+          } else if (requiredLevel < 115) {
+            statMultiplier = 2;
+            hpMultiplier = 20;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 100;
+            }
+          } else {
+            statMultiplier = 3;
+            hpMultiplier = 30;
+            if (primaryStat == 'HP') {
+              hpMultiplier += 150;
+            }
+          }
+        } 
+
+        // Update appropriate stats
+        if (primaryStat == 'STR') {
+          setScrollStr(slots * statMultiplier);
+          setScrollHP(slots * hpMultiplier);
+        }
+        else if (primaryStat == 'DEX') {
+          setScrollDex(slots * statMultiplier);
+          setScrollHP(slots * hpMultiplier);
+        }
+        else if (primaryStat == 'INT') {
+          setScrollInt(slots * statMultiplier);
+          setScrollHP(slots * hpMultiplier);
+        }
+        else if (primaryStat == 'LUK') {
+          setScrollLuk(slots * statMultiplier);
+          setScrollHP(slots * hpMultiplier);
+        }
+        else if (primaryStat == 'HP') {
+          setScrollHP(slots * hpMultiplier);
+        }
+
+        if (scrollType.includes('Spell Trace' && slots >= 4)) {
+          // "On the 4th success, if you used Spell Traces, you will receive +1 ATT/MATT"
+          setScrollAtt(1);
+          setScrollMatt(1);
+        }
+      }
+    } 
+    else if (category == 'Accessory') {
+      if (scrollType == '30% Spell Trace') {
+        if (requiredLevel < 75) {
+          statMultiplier = 3;
+          hpMultiplier = 150;
+        }
+        else if (requiredLevel < 115) {
+          statMultiplier = 4;
+          hpMultiplier = 200;
+        }
+        else {
+          statMultiplier = 5;
+          hpMultiplier = 250;
+        }
+      } 
+      else if (scrollType == '70% Spell Trace') {
+        if (requiredLevel < 115) {
+          statMultiplier = 2;
+          hpMultiplier = 100;
+        }
+        else {
+          statMultiplier = 3;
+          hpMultiplier = 150;
+        }
+      } 
+      else if (scrollType == '100% Spell Trace') {
+        if (requiredLevel < 115) {
+          statMultiplier = 1;
+          hpMultiplier = 50;
+        }
+        else {
+          statMultiplier = 2;
+          hpMultiplier = 100;
+        }
+      } 
+
+      // Update appropriate stats
+      if (primaryStat == 'STR') {
+        setScrollStr(slots * statMultiplier);
+      }
+      else if (primaryStat == 'DEX') {
+        setScrollDex(slots * statMultiplier);
+      }
+      else if (primaryStat == 'INT') {
+        setScrollInt(slots * statMultiplier);
+      }
+      else if (primaryStat == 'LUK') {
+        setScrollLuk(slots * statMultiplier);
+      }
+      else if (primaryStat == 'HP') {
+        setScrollHP(slots * hpMultiplier);
+      }
+    }
+    else if (category == 'Other') {
+      if (subcategory == 'Mechanical Heart') {
+        if (scrollType == '30% Spell Trace') {
+          if (requiredLevel < 75) {
+            attMultiplier = 3
+          }
+          else if (requiredLevel < 115) {
+            attMultiplier = 5
+          }
+          else {
+            attMultiplier = 7
+          }
+        } 
+        else if (scrollType == '70% Spell Trace') {
+          if (requiredLevel < 75) {
+            attMultiplier = 2
+          }
+          else if (requiredLevel < 115) {
+            attMultiplier = 3
+          }
+          else {
+            attMultiplier = 5
+          }
+        } 
+        else if (scrollType == '100% Spell Trace') {
+          if (requiredLevel < 75) {
+            attMultiplier = 1
+          }
+          else if (requiredLevel < 115) {
+            attMultiplier = 2
+          }
+          else {
+            attMultiplier = 3
+          }
+        } 
+
+        // Update appropriate stats
+        setScrollAtt(slots * attMultiplier);
+        setScrollMatt(slots * attMultiplier);
+      }
+    }
+    else if (category == 'One-Handed Weapon' || category == 'Two-Handed Weapon' || category == 'Unknown') {
+      // For notes on Unknown, please see calculateStarForceStats() comments about Adele weapons
+      if (scrollType == '15% Spell Trace') {
+        if (requiredLevel < 75) {
+          attMultiplier = 5;
+          statMultiplier = 2;
+          hpMultiplier = 100;
+        }
+        else if (requiredLevel < 115) {
+          attMultiplier = 7;
+          statMultiplier = 3;
+          hpMultiplier = 150;
+        }
+        else {
+          attMultiplier = 9;
+          statMultiplier = 4;
+          hpMultiplier = 200;
+        }
+      }
+      else if (scrollType == '30% Spell Trace') {
+        if (requiredLevel < 75) {
+          attMultiplier = 3;
+          statMultiplier = 1;
+          hpMultiplier = 50;
+        }
+        else if (requiredLevel < 115) {
+          attMultiplier = 5;
+          statMultiplier = 2;
+          hpMultiplier = 100;
+        }
+        else {
+          attMultiplier = 7;
+          statMultiplier = 3;
+          hpMultiplier = 150;
+        }
+      } 
+      else if (scrollType == '70% Spell Trace') {
+        if (requiredLevel < 75) {
+          attMultiplier = 2;
+        }
+        else if (requiredLevel < 115) {
+          attMultiplier = 3;
+          statMultiplier = 1;
+          hpMultiplier = 50;
+        }
+        else {
+          attMultiplier = 5;
+          statMultiplier = 2;
+          hpMultiplier = 100;
+        }
+      } 
+      else if (scrollType == '100% Spell Trace') {
+        if (requiredLevel < 75) {
+          attMultiplier = 1;
+        }
+        else if (requiredLevel < 115) {
+          attMultiplier = 2;
+        }
+        else {
+          attMultiplier = 3;
+          statMultiplier = 1;
+          hpMultiplier = 50;
+        }
+      } 
+
+      // Update appropriate stats
+      setScrollAtt(slots * attMultiplier);
+      setScrollMatt(slots * attMultiplier);
+
+      if (primaryStat == 'STR') {
+        setScrollStr(slots * statMultiplier);
+      }
+      else if (primaryStat == 'DEX') {
+        setScrollDex(slots * statMultiplier);
+      }
+      else if (primaryStat == 'INT') {
+        setScrollInt(slots * statMultiplier);
+      }
+      else if (primaryStat == 'LUK') {
+        setScrollLuk(slots * statMultiplier);
+      }
+      else if (primaryStat == 'HP') {
+        setScrollHP(slots * hpMultiplier);
+      }
+    }
   }
 
-  const updateStarForceStats = () => {
+  // TODO: Update Star Force values
+  const calculateStarForceStats = () => {
+    // Star Force mechanics info: https://strategywiki.org/wiki/MapleStory/Spell_Trace_and_Star_Force#Star_Force_Enhancement
+    //
     // Update Star Force stats based on how many stars the user inputs in the hook
     // For different kinds of Star Force, you can filter by job first to determine what stats to add.
     // 
@@ -323,7 +648,15 @@ const ItemTooltip = (props) => {
     //       Emblems are the only other equips with "Warrior" and "Unknown" as a category.
     //
     //       This is an EXTREMELY INFURIATING inconsistency on Nexon's part, because the data is not properly labeled. 
+    //
+    // Special Case:
+    //       Tyrants have a special Star Force stat system. Please see StrategyWiki link above.
+    //
   }
+
+  useEffect(() => {
+    calculateScrollStats();
+  }, [primaryStat, scrollType, starForce]);
 
   useEffect(() => {
     // Reset all the states since a new item was loaded
@@ -393,11 +726,11 @@ const ItemTooltip = (props) => {
               <Form.Control readOnly size="sm" type="text" value={requiredLevel}/>
             </Col>
             <Col>
-              <FormLabel> Attack Speed </FormLabel>
+              <FormLabel> Speed </FormLabel>
               <Form.Control readOnly size="sm" type="text" value={attackSpeed}/>
             </Col>
             <Col>
-              <FormLabel> Unique Equip </FormLabel>
+              <FormLabel> Exclusive </FormLabel>
               <Form.Control readOnly size="sm" type="text" value={exclusiveEquip}/>
             </Col>
             <Col>
@@ -417,18 +750,17 @@ const ItemTooltip = (props) => {
               <Form.Control size="sm" type="text" value={starForce} onChange={e => setStarForce(e.target.value)}/>
             </Col>
             <Col>
-              <FormLabel> Scroll Slots </FormLabel>
-              <Form.Control size="sm" type="text" value={slots} onChange={e => setSlots(e.target.value)}/>
+              <FormLabel> Scrolls </FormLabel>
+              <ScrollsMenu 
+                stat={primaryStat}
+                setPrimaryStat={setPrimaryStat}
+                type={scrollType}
+                setScrollType={setScrollType} 
+                slots={slots}
+                setSlots={setSlots}
+                id={props.itemID}
+              />
             </Col>
-            <Col>
-              <FormLabel> Scroll Type </FormLabel>
-              <Form.Control size="sm" type="text" value={slots} onChange={e => setSlots(e.target.value)}/>
-            </Col>
-            {/* TODO: Include different kinds of scrolls options here */}
-            <ScrollsMenu 
-              name='Scroll Type'
-              
-            />
           </Form.Row>
 
           {/* Stats Window => Base | Flame | Star Force | Scrolling */}
@@ -512,16 +844,19 @@ const ItemTooltip = (props) => {
                 name = 'Line 1'
                 potentialLine = {potentialLine1}
                 setPotentialLine = {setPotentialLine1}
+                id={props.itemID}
               />
               <PotentialLine 
                 name = 'Line 2'
                 potentialLine = {potentialLine2}
                 setPotentialLine = {setPotentialLine2}
+                id={props.itemID}
               />
               <PotentialLine 
                 name = 'Line 3'
                 potentialLine = {potentialLine3}
                 setPotentialLine = {setPotentialLine3}
+                id={props.itemID}
               />
             </Col>
             <Col>
@@ -530,16 +865,19 @@ const ItemTooltip = (props) => {
                 name = 'Line 1'
                 potentialLine = {bonusPotentialLine1}
                 setPotentialLine = {setBonusPotentialLine1}
+                id={props.itemID}
               />
               <PotentialLine 
                 name = 'Line 2'
                 potentialLine = {bonusPotentialLine2}
                 setPotentialLine = {setBonusPotentialLine2}
+                id={props.itemID}
               />
               <PotentialLine 
                 name = 'Line 3'
                 potentialLine = {bonusPotentialLine3}
                 setPotentialLine = {setBonusPotentialLine3}
+                id={props.itemID}
               />
             </Col>
           </Form.Row>
