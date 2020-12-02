@@ -1,5 +1,7 @@
 # MapleStory Equip Simulator
 
+> A separate project is being developed that is much further along. So, in the meantime, this project will be closed. Thank you!
+
 A GUI for MapleStory equipment damage calculator. The idea is to convert MasteringRobert's [spreadsheet](https://docs.google.com/spreadsheets/d/1mVZerZgojSRKq0FsUco_n097y45EPa4w1QptWuU6mwM/edit#gid=0) and [other similar tools](https://brendonmay.github.io/wseCalculator/) into a more practical GUI.
 
 For example, one conceptual idea is to use a similar GUI to this [cube simulator](https://stripedypaper.github.io/cube/). A user should be able to set their equipment stats and know exactly what their stats and details would be.
