@@ -339,6 +339,16 @@
         "attMultiplier": 0,
         "hpMultiplier": 0
       },
+      "Glove": {
+        "statMultiplier": 10,
+        "attMultiplier": 0,
+        "hpMultiplier": 0
+      },
+      "Mechanical Heart": {
+        "statMultiplier": 10,
+        "attMultiplier": 0,
+        "hpMultiplier": 0
+      },
       "Weapon": {
         "statMultiplier": 3,
         "attMultiplier": 10,

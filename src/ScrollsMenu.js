@@ -4,8 +4,6 @@ import React, {useEffect, useState} from 'react'
 const ScrollsMenu = (props) => {
   // Menu for user to select from list of common scrolls that provide consistent stats (e.g. no Chaos Scrolls).
   //
-  // Currently supports: Spell Traces, Gollux, Primes, Ark Scrolls
-  //
   // TODO: Look into having picture support inside Dropdown Menu for each kind of scroll?
   const [scrollType, setScrollType] = useState(props.type);    // User Selected Scroll
   const [scrollStat, setScrollStat] = useState(props.stat);    // User Selected Stat for Spell Trace Scrolls
@@ -22,6 +20,7 @@ const ScrollsMenu = (props) => {
       '100% Spell Trace',
       '9th Anniversary Prime Scroll'
       // NOTE: If you add an scroll to Special Scrolls in scrolls.json, please add scroll name here.
+      // Default scrolls are all static stat scrolls from here: https://www.grandislibrary.com/contents/upgrading-enhancing-equipment
     ];
 
     // Scrolls with Item Restrictions
@@ -64,7 +63,7 @@ const ScrollsMenu = (props) => {
   const onSelectStat = (stat) => {
     // update both local and parent state hook to properly update dropdown title
     setScrollStat(stat);
-    props.setPrimaryStat(stat);
+    props.setScrollPrimaryStat(stat);
   };
 
   const onSelectType = (type) => {

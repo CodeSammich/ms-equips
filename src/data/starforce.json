@@ -1,0 +1,575 @@
+{
+  "Regular": {
+    "0": {
+      "jobStats": 0,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 0,
+      "categoryAHP": 0,
+      "weaponMP": 0,
+      "shoeSpeed": 0,
+      "shoeJump": 0,
+      "gloveVisibleAtt": 0
+    },
+    "1": {
+      "jobStats": 2,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 5,
+      "weaponMP": 5,
+      "shoeSpeed": 0,
+      "shoeJump": 0,
+      "gloveVisibleAtt": 0
+    },
+    "2": {
+      "jobStats": 4,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 10,
+      "weaponMP": 10,
+      "shoeSpeed": 0,
+      "shoeJump": 0,
+      "gloveVisibleAtt": 0
+    },
+    "3": {
+      "jobStats": 6,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 15,
+      "weaponMP": 15,
+      "shoeSpeed": 1,
+      "shoeJump": 1,
+      "gloveVisibleAtt": 0
+    },
+    "4": {
+      "jobStats": 8,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 25,
+      "weaponMP": 25,
+      "shoeSpeed": 2,
+      "shoeJump": 2,
+      "gloveVisibleAtt": 0
+    },
+    "5": {
+      "jobStats": 10,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 35,
+      "weaponMP": 35,
+      "shoeSpeed": 3,
+      "shoeJump": 3,
+      "gloveVisibleAtt": 1
+    },
+    "6": {
+      "jobStats": 13,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 50,
+      "weaponMP": 50,
+      "shoeSpeed": 4,
+      "shoeJump": 4,
+      "gloveVisibleAtt": 1
+    },
+    "7": {
+      "jobStats": 16,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 65,
+      "weaponMP": 65,
+      "shoeSpeed": 5,
+      "shoeJump": 5,
+      "gloveVisibleAtt": 2
+    },
+    "8": {
+      "jobStats": 19,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 85,
+      "weaponMP": 85,
+      "shoeSpeed": 6,
+      "shoeJump": 6,
+      "gloveVisibleAtt": 2
+    },
+    "9": {
+      "jobStats": 22,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 105,
+      "weaponMP": 105,
+      "shoeSpeed": 7,
+      "shoeJump": 7,
+      "gloveVisibleAtt": 3
+    },
+    "10": {
+      "jobStats": 25,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 130,
+      "weaponMP": 130,
+      "shoeSpeed": 8,
+      "shoeJump": 8,
+      "gloveVisibleAtt": 3
+    },
+    "11": {
+      "jobStats": 28,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 155,
+      "weaponMP": 155,
+      "shoeSpeed": 10,
+      "shoeJump": 10,
+      "gloveVisibleAtt": 4
+    },
+    "12": {
+      "jobStats": 31,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 180,
+      "weaponMP": 180,
+      "shoeSpeed": 12,
+      "shoeJump": 12,
+      "gloveVisibleAtt": 4
+    },
+    "13": {
+      "jobStats": 34,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 205,
+      "weaponMP": 205,
+      "shoeSpeed": 14,
+      "shoeJump": 14,
+      "gloveVisibleAtt": 5
+    },
+    "14": {
+      "jobStats": 37,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 230,
+      "weaponMP": 230,
+      "shoeSpeed": 16,
+      "shoeJump": 16,
+      "gloveVisibleAtt": 6
+    },
+    "15": {
+      "jobStats": 40,
+      "visibleStats": 0,
+      "nonWeaponAtt": 0,
+      "weaponVisibleAtt": 2,
+      "categoryAHP": 255,
+      "weaponMP": 255,
+      "shoeSpeed": 18,
+      "shoeJump": 18,
+      "gloveVisibleAtt": 7
+    },
+    "16": {
+      "128-137": {
+        "visibleStats": 7,
+        "nonWeaponAtt": 7,
+        "weaponVisibleAtt": 6
+      },
+      "138-149": {
+        "visibleStats": 9,
+        "nonWeaponAtt": 8,
+        "weaponVisibleAtt": 7
+      },
+      "150-159": {
+        "visibleStats": 11,
+        "nonWeaponAtt": 9,
+        "weaponVisibleAtt": 8
+      },
+      "160-199": {
+        "visibleStats": 13,
+        "nonWeaponAtt": 10,
+        "weaponVisibleAtt": 9
+      },
+      "200": {
+        "visibleStats": 15,
+        "nonWeaponAtt": 12,
+        "weaponVisibleAtt": 13
+      }
+    },
+    "17": {
+      "128-137": {
+        "visibleStats": 14,
+        "nonWeaponAtt": 15,
+        "weaponVisibleAtt": 13
+      },
+      "138-149": {
+        "visibleStats": 18,
+        "nonWeaponAtt": 17,
+        "weaponVisibleAtt": 15
+      },
+      "150-159": {
+        "visibleStats": 22,
+        "nonWeaponAtt": 19,
+        "weaponVisibleAtt": 17
+      },
+      "160-199": {
+        "visibleStats": 26,
+        "nonWeaponAtt": 21,
+        "weaponVisibleAtt": 18
+      },
+      "200": {
+        "visibleStats": 30,
+        "nonWeaponAtt": 25,
+        "weaponVisibleAtt": 26
+      }
+    },
+    "18": {
+      "128-137": {
+        "visibleStats": 21,
+        "nonWeaponAtt": 24,
+        "weaponVisibleAtt": 20
+      },
+      "138-149": {
+        "visibleStats": 27,
+        "nonWeaponAtt": 27,
+        "weaponVisibleAtt": 23
+      },
+      "150-159": {
+        "visibleStats": 33,
+        "nonWeaponAtt": 30,
+        "weaponVisibleAtt": 26
+      },
+      "160-199": {
+        "visibleStats": 39,
+        "nonWeaponAtt": 33,
+        "weaponVisibleAtt": 28
+      },
+      "200": {
+        "visibleStats": 45,
+        "nonWeaponAtt": 39,
+        "weaponVisibleAtt": 40
+      }
+    },
+    "19": {
+      "128-137": {
+        "visibleStats": 28,
+        "nonWeaponAtt": 34,
+        "weaponVisibleAtt": 28
+      },
+      "138-149": {
+        "visibleStats": 36,
+        "nonWeaponAtt": 38,
+        "weaponVisibleAtt": 32
+      },
+      "150-159": {
+        "visibleStats": 44,
+        "nonWeaponAtt": 42,
+        "weaponVisibleAtt": 36
+      },
+      "160-199": {
+        "visibleStats": 52,
+        "nonWeaponAtt": 46,
+        "weaponVisibleAtt": 39
+      },
+      "200": {
+        "visibleStats": 60,
+        "nonWeaponAtt": 54,
+        "weaponVisibleAtt": 54
+      }
+    },
+    "20": {
+      "128-137": {
+        "visibleStats": 35,
+        "nonWeaponAtt": 45,
+        "weaponVisibleAtt": 37
+      },
+      "138-149": {
+        "visibleStats": 45,
+        "nonWeaponAtt": 50,
+        "weaponVisibleAtt": 42
+      },
+      "150-159": {
+        "visibleStats": 55,
+        "nonWeaponAtt": 55,
+        "weaponVisibleAtt": 47
+      },
+      "160-199": {
+        "visibleStats": 65,
+        "nonWeaponAtt": 60,
+        "weaponVisibleAtt": 51
+      },
+      "200": {
+        "visibleStats": 75,
+        "nonWeaponAtt": 70,
+        "weaponVisibleAtt": 69
+      }
+    },
+    "21": {
+      "138-149": {
+        "visibleStats": 54,
+        "nonWeaponAtt": 63,
+        "weaponVisibleAtt": 53
+      },
+      "150-159": {
+        "visibleStats": 66,
+        "nonWeaponAtt": 69,
+        "weaponVisibleAtt": 59
+      },
+      "160-199": {
+        "visibleStats": 78,
+        "nonWeaponAtt": 75,
+        "weaponVisibleAtt": 64
+      },
+      "200": {
+        "visibleStats": 90,
+        "nonWeaponAtt": 87,
+        "weaponVisibleAtt": 85
+      }
+    },
+    "22": {
+      "138-149": {
+        "visibleStats": 63,
+        "nonWeaponAtt": 78,
+        "weaponVisibleAtt": 65
+      },
+      "150-159": {
+        "visibleStats": 77,
+        "nonWeaponAtt": 85,
+        "weaponVisibleAtt": 72
+      },
+      "160-199": {
+        "visibleStats": 91,
+        "nonWeaponAtt": 92,
+        "weaponVisibleAtt": 78
+      },
+      "200": {
+        "visibleStats": 105,
+        "nonWeaponAtt": 106,
+        "weaponVisibleAtt": 102
+      }
+    },
+    "23": {
+      "138-149": {
+        "visibleStats": 63,
+        "nonWeaponAtt": 95,
+        "weaponVisibleAtt": 95
+      },
+      "150-159": {
+        "visibleStats": 77,
+        "nonWeaponAtt": 103,
+        "weaponVisibleAtt": 103
+      },
+      "160-199": {
+        "visibleStats": 91,
+        "nonWeaponAtt": 111,
+        "weaponVisibleAtt": 110
+      },
+      "200": {
+        "visibleStats": 105,
+        "nonWeaponAtt": 127,
+        "weaponVisibleAtt": 136
+      }
+    },
+    "24": {
+      "138-149": {
+        "visibleStats": 63,
+        "nonWeaponAtt": 114,
+        "weaponVisibleAtt": 126
+      },
+      "150-159": {
+        "visibleStats": 77,
+        "nonWeaponAtt": 123,
+        "weaponVisibleAtt": 135
+      },
+      "160-199": {
+        "visibleStats": 91,
+        "nonWeaponAtt": 132,
+        "weaponVisibleAtt": 143
+      },
+      "200": {
+        "visibleStats": 105,
+        "nonWeaponAtt": 150,
+        "weaponVisibleAtt": 171
+      }
+    },
+    "25": {
+      "138-149": {
+        "visibleStats": 63,
+        "nonWeaponAtt": 135,
+        "weaponVisibleAtt": 158
+      },
+      "150-159": {
+        "visibleStats": 77,
+        "nonWeaponAtt": 145,
+        "weaponVisibleAtt": 168
+      },
+      "160-199": {
+        "visibleStats": 91,
+        "nonWeaponAtt": 155,
+        "weaponVisibleAtt": 177
+      },
+      "200": {
+        "visibleStats": 105,
+        "nonWeaponAtt": 175,
+        "weaponVisibleAtt": 207
+      }
+    }
+  },
+  "Superior": {
+    "0": {
+      "Lv80": {
+        "visibleStats": 0,
+        "nonWeaponAtt": 0
+      },
+      "Lv110": {
+        "visibleStats": 0,
+        "nonWeaponAtt": 0
+      },
+      "Lv150": {
+        "visibleStats": 0,
+        "nonWeaponAtt": 0
+      }
+    },
+    "1": {
+      "Lv80": {
+        "visibleStats": 2,
+        "nonWeaponAtt": 0
+      },
+      "Lv110": {
+        "visibleStats": 9,
+        "nonWeaponAtt": 0
+      },
+      "Lv150": {
+        "visibleStats": 19,
+        "nonWeaponAtt": 0
+      }
+    },
+    "2": {
+      "Lv80": {
+        "visibleStats": 5,
+        "nonWeaponAtt": 0
+      },
+      "Lv110": {
+        "visibleStats": 19,
+        "nonWeaponAtt": 0
+      },
+      "Lv150": {
+        "visibleStats": 39,
+        "nonWeaponAtt": 0
+      }
+    },
+    "3": {
+      "Lv80": {
+        "visibleStats": 10,
+        "nonWeaponAtt": 0
+      },
+      "Lv110": {
+        "visibleStats": 31,
+        "nonWeaponAtt": 0
+      },
+      "Lv150": {
+        "visibleStats": 61,
+        "nonWeaponAtt": 0
+      }
+    },
+    "4": {
+      "Lv110": {
+        "visibleStats": 46,
+        "nonWeaponAtt": 0
+      },
+      "Lv150": {
+        "visibleStats": 86,
+        "nonWeaponAtt": 0
+      }
+    },
+    "5": {
+      "Lv110": {
+        "visibleStats": 65,
+        "nonWeaponAtt": 0
+      },
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 0
+      }
+    },
+    "6": {
+      "Lv110": {
+        "visibleStats": 65,
+        "nonWeaponAtt": 5
+      },
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 9
+      }
+    },
+    "7": {
+      "Lv110": {
+        "visibleStats": 65,
+        "nonWeaponAtt": 11
+      },
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 19
+      }
+    },
+    "8": {
+      "Lv110": {
+        "visibleStats": 65,
+        "nonWeaponAtt": 18
+      },
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 30
+      }
+    },
+    "9": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 42
+      }
+    },
+    "10": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 55
+      }
+    },
+    "11": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 70
+      }
+    },
+    "12": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 87
+      }
+    },
+    "13": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 106
+      }
+    },
+    "14": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 127
+      }
+    },
+    "15": {
+      "Lv150": {
+        "visibleStats": 115,
+        "nonWeaponAtt": 150
+      }
+    }
+  }
+}

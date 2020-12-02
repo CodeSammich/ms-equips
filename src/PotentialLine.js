@@ -33,10 +33,12 @@ const PotentialLine = (props) => {
   useEffect(() => {
     // Reset Potential Lines menu name
     setSelectedPotentialLine(props.name);
-  }, [props.id, props.potentialLine]);         // Resets on new item load or if reset button is pressed
+  }, [props.id]);         // Resets on new item load or if reset button is pressed
 
   return (
     <React.Fragment>
+      {/* TODO: Change this uncontrolled input into a Dropdown Menu, much like spell tracing. */}
+      {/* TODO: Remove Bonus Potential Line options from regular Potential */}
       {/* Save the user's stat selection for future state update */}
       {/* NOTE: Not using inline for loop because object keys cannot have symbols (e.g. %) in name */}
       <InputGroup className="sm-3">
@@ -81,7 +83,7 @@ const PotentialLine = (props) => {
 
         {/* Update the earlier chosen state variable with what the user typed in (e.target.value) */}
         {/* Only loads if user actually selects a potential line */}
-        { selectedPotentialLine && <Form.Control type="text" value={props.potentialLine[selectedPotentialLine]} onChange={e => onChangeState(e.target.value)}/> }
+        { selectedPotentialLine && <Form.Control type="text" onChange={e => onChangeState(e.target.value)}/> }
       </InputGroup>
     </React.Fragment>
   );

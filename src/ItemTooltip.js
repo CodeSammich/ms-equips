@@ -5,10 +5,11 @@ import React, { useEffect, useState } from 'react'
 import PotentialLine from './PotentialLine'
 import ScrollsMenu from './ScrollsMenu'
 import {getItemStats} from './apis'
-import scrolls from './scrolls/scrolls.json'
+import scrolls from './data/scrolls.json'
+import sf from './data/starforce.json'
 
 const ItemTooltip = (props) => {
-  // Design note:
+  // WARNING: Do not use === on any hooks in this class, because information returned from API may have unpredictable types.
   //
   // ItemTooltip simply stores the stats as needed by the Item tooltip itself.
   // This may include a breakdown of base, scroll, flame, and star force stats.
@@ -37,6 +38,7 @@ const ItemTooltip = (props) => {
   // As a user types in more information, the form should auto-generate the appropriate stats.
 
   // General Information
+  const [itemID, setItemID] = useState(0);
   const [name, setName] = useState('');
   const [imageUrl, setImageUrl] = useState('');
   const [requiredLevel, setRequiredLevel] = useState(0);
@@ -46,6 +48,7 @@ const ItemTooltip = (props) => {
   const [hammers, setHammers] = useState(2);                   // TODO: change this beyond GMS default for all regions
   const [category, setCategory] = useState('');
   const [subcategory, setSubcategory] = useState('');
+  const [isSuperior, setIsSuperior] = useState(false);         // e.g. Tyrants, etc.
 
   // Job Information Possibilities
   // Array of required jobs:
@@ -58,7 +61,7 @@ const ItemTooltip = (props) => {
   // TODO: Make sure to compute star force stats and update the SF readonly fields appropriately
   const [starForce, setStarForce] = useState(0);
   const [scrollType, setScrollType] = useState('Type');            // See ScrollsMenu, defaults to label for menu
-  const [primaryStat, setPrimaryStat] = useState('Stat');          // For scrolling only. See ScrollsMenu, defaults to label for menu
+  const [scrollPrimaryStat, setScrollPrimaryStat] = useState('Stat');          // For scrolling only. See ScrollsMenu, defaults to label for menu
 
   // Non-potential Stats
   // Strength
@@ -130,11 +133,6 @@ const ItemTooltip = (props) => {
   //
   // tldr; Separating into separate component because there will only ever be 6 potentials that use only a subset of these fields.
   let initialPotentialState = {
-    // Default PotentialLine component Dropdown menu names. Prevents input field from crashing with a new item.
-    "Line 1": 0,
-    "Line 2": 0,
-    "Line 3": 0,
-
     // Potential Stats
     // Percent Stats
     potentialStrPercent: 0,
@@ -198,6 +196,7 @@ const ItemTooltip = (props) => {
   const [isReset, setIsReset] = useState(false);
   const resetAllStates = () => {
     // General Information
+    setItemID(0);
     setName('');
     setImageUrl('');
     setRequiredLevel(0);
@@ -207,11 +206,12 @@ const ItemTooltip = (props) => {
     setHammers(2);                   
     setCategory('');
     setSubcategory('');
+    setIsSuperior(false);
 
     // Star Force / Scrolling UI 
     setStarForce(0);
     setScrollType('Type');              // Changing this value triggers useEffect() in ScrollsMenu
-    setPrimaryStat('Stat');              
+    setScrollPrimaryStat('Stat');              
 
     // Non-potential Stats
     // Strength
@@ -332,7 +332,8 @@ const ItemTooltip = (props) => {
     // Combine all weapon category names into "Weapon"
     // Please see explanation on why Adele weapon is so strangely categorized
     if (category.includes('Weapon') ||
-        (category == 'Unknown' && job == 'Warrior' && !props.name.includes('Emblem'))) { // Adele
+        // (category === 'Unknown' && job === 'Warrior' && !props.name.includes('Emblem'))) { // Adele
+        (category == 'Unknown' && job == 'Warrior')) {
           categoryKey = 'Weapon';
     }
 
@@ -349,42 +350,51 @@ const ItemTooltip = (props) => {
       ({attMultiplier, statMultiplier, hpMultiplier, DAHPMultiplier} 
         = scrolls['Spell Trace'][categoryKey][scrollType][level]);
 
-      // primaryStat only applies to Spell Traces
-      if (primaryStat == 'STR') {
+      // scrollPrimaryStat only applies to Spell Traces
+      if (scrollPrimaryStat === 'STR') {
         setScrollStr(slots * statMultiplier);
         setScrollDex(0);
         setScrollInt(0);
         setScrollLuk(0);
         setScrollHP(slots * hpMultiplier);
       }
-      else if (primaryStat == 'DEX') {
+      else if (scrollPrimaryStat === 'DEX') {
         setScrollStr(0);
         setScrollDex(slots * statMultiplier);
         setScrollInt(0);
         setScrollLuk(0);
         setScrollHP(slots * hpMultiplier);
       }
-      else if (primaryStat == 'INT') {
+      else if (scrollPrimaryStat === 'INT') {
         setScrollStr(0);
         setScrollDex(0);
         setScrollInt(slots * statMultiplier);
         setScrollLuk(0);
         setScrollHP(slots * hpMultiplier);
       }
-      else if (primaryStat == 'LUK') {
+      else if (scrollPrimaryStat === 'LUK') {
         setScrollStr(0);
         setScrollDex(0);
         setScrollInt(0);
         setScrollLuk(slots * statMultiplier);
         setScrollHP(slots * hpMultiplier);
       }
-      else if (primaryStat == 'HP') {  // Demon Avengers
+      else if (scrollPrimaryStat === 'HP') {  // Demon Avengers
         setScrollStr(0);
         setScrollDex(0);
         setScrollInt(0);
         setScrollLuk(0);
         setScrollHP(slots * (hpMultiplier + DAHPMultiplier));
       } 
+      else {
+        // For items that don't have primary stat (i.e. Gloves, Hearts)
+        setScrollStr(0);
+        setScrollDex(0);
+        setScrollInt(0);
+        setScrollLuk(0);
+        setScrollHP(0);
+        setScrollMP(0);
+      }
 
       if (slots >= 4 && categoryKey == 'Armor') {
         // "On the 4th success, if you used Spell Traces on Armor, you will receive +1 ATT/MATT"
@@ -438,12 +448,117 @@ const ItemTooltip = (props) => {
     //
     // Special Case:
     //       Tyrants have a special Star Force stat system. Please see StrategyWiki link above.
-    //
+
+    // Converting Hooks to local variables to make JSON simpler
+    let level = '';               // conversion from requiredLevel
+    let categoryKey = category;   // combine category + subcategory
+
+    // Convert level to proper JSON key, if it exists
+    if (requiredLevel <= 137) {
+      level = '128-138';
+    }
+    else if (requiredLevel <= 149) {
+      level = '138-149';
+    }
+    else if (requiredLevel <= 159) {
+      level = '150-159';
+    }
+    else if (requiredLevel <= 199) {
+      level = '160-199';
+    }
+    else if (requiredLevel == 200) {
+      level = '200';
+    }
+
+    // Combine all weapon category names into "Weapon"
+    // Please see explanation on why Adele weapon is so strangely categorized
+    if (category.includes('Weapon') ||
+        // (category === 'Unknown' && job === 'Warrior' && !props.name.includes('Emblem'))) { // Adele
+        (category == 'Unknown' && job == 'Warrior')) {
+          categoryKey = 'Weapon';
+    }
+
+    // "Category A items: Items that will increase Max HP" 
+    const categoryA = [
+      'Hat',
+      'Top',
+      'Bottom',
+      'Overall',
+      'Cape',
+      'Ring',
+      'Pendant',
+      'Belt',
+      'Shoulderpad',
+      'Shield',
+      'Weapon'
+    ]
+
+    let jobStats = 0;
+    let visibleStats = 0;            // If and only if an item has a stat > 0, then add visibleStats to that stat.
+    let nonWeaponAtt = 0;
+    let weaponVisibleAtt = 0;        // If and only if an item has an att (matt) > 0, then add this field to it.
+    let categoryAHP = 0;
+    let weaponMP = 0;
+    let gloveVisibleAtt = 0;
+
+    // Check if starForce string is a number, as sf JSON only takes string numbers
+    if (!isNaN(parseInt(starForce))) {                 
+      // Assume that starForce value entered is valid. Star limit checking is handled in StarForceMenu component
+      if (starForce >= 0 && starForce <= 15) {
+        if (isSuperior) {
+          // Three types of Superior Items: Lv80 Elite Heliseum, Lv110 Nova, Lv150 Tyrant
+          ({visibleStats, nonWeaponAtt} = sf['Superior'][starForce][`Lv${requiredLevel}`])
+
+          // Superior Items have all equivalent 4 primary stats and equivalent ATT/MATT on every item
+          setStarStr(visibleStats);
+          setStarDex(visibleStats);
+          setStarInt(visibleStats);
+          setStarLuk(visibleStats);
+          setStarAtt(nonWeaponAtt);
+          setStarMatt(nonWeaponAtt);
+        }
+        else {
+          // Regular Star Force equips
+          ({jobStats, visibleStats, nonWeaponAtt, weaponVisibleAtt, categoryAHP, weaponMP, gloveVisibleAtt}
+            = sf['Regular'][starForce])
+
+          // Weapons have additional properties during Star Forcing
+          if (categoryKey == 'Weapon') {
+            // Below 15, Weapon Visibile Att is a percentage of base attack (e.g. 2%)
+            if (baseAtt > 0) {
+              setStarAtt(baseAtt * weaponVisibleAtt / 100);
+            }
+            if (baseMatt > 0) {
+              setStarMatt(baseAtt * weaponVisibleAtt / 100);
+            }
+            setStarMP(weaponMP);
+          }
+
+          // All Equips update these stats
+
+
+        }
+      } 
+      else if (starForce >= 16 && starForce <= 25 && !isSuperior) {
+        // 16+ stars is just the stats at 15-stars + stats gained from 16 onwards
+
+        if (categoryKey == 'Weapon') {
+          // WeaponVisibleAtt from sf is flat (e.g. +9) in addition to total att from 15 stars.
+        }
+        else {
+
+        }
+      }
+    }
   }
 
   useEffect(() => {
     calculateScrollStats();
-  }, [primaryStat, scrollType, starForce, slots]);
+  }, [scrollPrimaryStat, scrollType, slots]);
+
+  useEffect(() => {
+    calculateStarForceStats();
+  }, [starForce]);
 
   useEffect(() => {
     // Reset all the states since a new item was loaded
@@ -456,7 +571,9 @@ const ItemTooltip = (props) => {
     getItemStats(props.region, props.version, props.itemID)
       .then(response => response.json())
       .then(item => {
+        // Note: If key doesn't exist in JSON, line is ignored.
         // Update General Information
+        setItemID(props.itemID);
         setName(item.description.name);
         setRequiredLevel(item.metaInfo.reqLevel);
         setAttackSpeed(item.metaInfo.attackSpeed);
@@ -465,6 +582,7 @@ const ItemTooltip = (props) => {
         setSubcategory(item.typeInfo.subCategory);
         setSlots(item.metaInfo.tuc + hammers);
         setJob(props.itemJob);                   // this is passed from Search b/c direct item ID query doesn't contain job
+        setIsSuperior(item.metaInfo.superiorEqp);
 
         // Update Base Stats
         setBaseStr(item.metaInfo.incSTR); 
@@ -534,14 +652,19 @@ const ItemTooltip = (props) => {
           {/* Star Force + num/kind of scrolls/hammers applied */}
           <Form.Row>
             <Col>
+              {/* Make a separate StarForce component to handle Dropdown Menu limits and level vs. star limit checking 
+                  TODO: Limit max number of stars depending on level to make sure the JSON keys don't break.
+                  Regular SF: https://strategywiki.org/wiki/MapleStory/Spell_Trace_and_Star_Force#Star_Limit
+                  Superior SF: https://strategywiki.org/wiki/MapleStory/Spell_Trace_and_Star_Force#Star_Limit_2 */}
+
               <FormLabel> Star Force </FormLabel>
               <Form.Control size="sm" type="text" value={starForce} onChange={e => setStarForce(e.target.value)}/>
             </Col>
             <Col>
               <FormLabel> Scrolls </FormLabel>
               <ScrollsMenu 
-                stat={primaryStat}
-                setPrimaryStat={setPrimaryStat}
+                stat={scrollPrimaryStat}
+                setScrollPrimaryStat={setScrollPrimaryStat}
                 type={scrollType}
                 setScrollType={setScrollType} 
                 slots={slots}
@@ -636,19 +759,19 @@ const ItemTooltip = (props) => {
                 name = 'Line 1'
                 potentialLine = {potentialLine1}
                 setPotentialLine = {setPotentialLine1}
-                id={props.itemID}
+                id={itemID}
               />
               <PotentialLine 
                 name = 'Line 2'
                 potentialLine = {potentialLine2}
                 setPotentialLine = {setPotentialLine2}
-                id={props.itemID}
+                id={itemID}
               />
               <PotentialLine 
                 name = 'Line 3'
                 potentialLine = {potentialLine3}
                 setPotentialLine = {setPotentialLine3}
-                id={props.itemID}
+                id={itemID}
               />
             </Col>
             <Col>
@@ -657,19 +780,19 @@ const ItemTooltip = (props) => {
                 name = 'Line 1'
                 potentialLine = {bonusPotentialLine1}
                 setPotentialLine = {setBonusPotentialLine1}
-                id={props.itemID}
+                id={itemID}
               />
               <PotentialLine 
                 name = 'Line 2'
                 potentialLine = {bonusPotentialLine2}
                 setPotentialLine = {setBonusPotentialLine2}
-                id={props.itemID}
+                id={itemID}
               />
               <PotentialLine 
                 name = 'Line 3'
                 potentialLine = {bonusPotentialLine3}
                 setPotentialLine = {setBonusPotentialLine3}
-                id={props.itemID}
+                id={itemID}
               />
             </Col>
           </Form.Row>

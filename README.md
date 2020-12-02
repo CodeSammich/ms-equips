@@ -40,12 +40,14 @@ The main advantage of this tool is its relatively unintimidating UI. In addition
 - [ ] Make form simple step-by-step (one input section at a time) to make users less scared
 - [ ] Adjust inputs/website layouts displayed based on user: Class, Server, Region. (i.e. hide stats that are irrelevant for the user)
 - [ ] Hide irrelevant information per equip (e.g. thief equips don't have int, rings can't get %damage)
-- [ ] Have a flame number input checker (to make sure flame inputted is a valid configuration for flame)
+- [ ] Have a potential/flame form input checker (to make sure stats inputted is valid)
 - [ ] Gear Presets for easier UI access
+- [ ] Convert ALL React-Bootstrap dependencies to [Material Design Bootstrap](https://mdbootstrap.com/docs/react/)?
 
 ### Defensive Programming
 
 - [ ] Make sure all form inputs are properly cleaned and standard defensive techniques are used for all Forms / Buttons
+- [ ] Please check "Input Masking for React"
 
 ## Optional Augmentations
 
